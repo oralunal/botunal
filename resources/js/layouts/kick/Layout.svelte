@@ -17,6 +17,7 @@
     import { index as commandsIndex } from '@/routes/kick/commands';
     import { index as moderationIndex } from '@/routes/kick/moderation';
     import { index as timersIndex } from '@/routes/kick/timers';
+    import { index as usersIndex } from '@/routes/kick/users';
     import type { NavItem } from '@/types';
 
     let {
@@ -35,6 +36,7 @@
         { title: 'Timers', href: timersIndex() },
         { title: 'Command logs', href: commandLogsIndex() },
         { title: 'Moderation', href: moderationIndex() },
+        { title: 'Users', href: usersIndex() },
     ];
 
     const url = currentUrlState();

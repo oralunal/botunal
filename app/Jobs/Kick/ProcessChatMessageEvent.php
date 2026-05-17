@@ -2,6 +2,7 @@
 
 namespace App\Jobs\Kick;
 
+use App\Concerns\SyncsKickUser;
 use App\Models\ChatMessage;
 use App\Models\KickWebhookEvent;
 use App\Services\Kick\CommandDispatcher;
@@ -9,6 +10,8 @@ use Illuminate\Support\Carbon;
 
 class ProcessChatMessageEvent extends ProcessKickEvent
 {
+    use SyncsKickUser;
+
     /**
      * @param  array<string, mixed>  $payload
      */
@@ -16,6 +19,7 @@ class ProcessChatMessageEvent extends ProcessKickEvent
     {
         $prefix = config('services.kick.command_prefix', '!');
         $content = (string) data_get($payload, 'content', '');
+        $sentAt = $this->timestamp($payload);
 
         $message = ChatMessage::updateOrCreate(
             ['kick_message_id' => data_get($payload, 'message_id')],
@@ -26,8 +30,15 @@ class ProcessChatMessageEvent extends ProcessKickEvent
                 'content' => $content,
                 'is_command' => str_starts_with(trim($content), $prefix),
                 'replied_to_message_id' => data_get($payload, 'replies_to.message_id'),
-                'sent_at' => $this->timestamp($payload),
+                'sent_at' => $sentAt,
             ],
+        );
+
+        $this->syncKickUser(
+            data_get($payload, 'sender.user_id'),
+            data_get($payload, 'sender.username', 'unknown'),
+            data_get($payload, 'sender.identity'),
+            $sentAt,
         );
 
         if ($message->is_command) {

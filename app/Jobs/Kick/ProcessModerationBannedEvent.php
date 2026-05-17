@@ -2,18 +2,22 @@
 
 namespace App\Jobs\Kick;
 
+use App\Concerns\SyncsKickUser;
 use App\Models\KickBan;
 use App\Models\KickWebhookEvent;
 use Illuminate\Support\Carbon;
 
 class ProcessModerationBannedEvent extends ProcessKickEvent
 {
+    use SyncsKickUser;
+
     /**
      * @param  array<string, mixed>  $payload
      */
     protected function project(array $payload, KickWebhookEvent $event): void
     {
         $expiresAt = data_get($payload, 'metadata.expires_at');
+        $occurredAt = $this->timestamp($payload, $event);
 
         KickBan::create([
             'target_kick_user_id' => data_get($payload, 'banned_user.user_id'),
@@ -23,8 +27,15 @@ class ProcessModerationBannedEvent extends ProcessKickEvent
             'reason' => data_get($payload, 'metadata.reason'),
             'expires_at' => $expiresAt !== null ? Carbon::parse($expiresAt) : null,
             'source' => KickBan::SOURCE_WEBHOOK,
-            'occurred_at' => $this->timestamp($payload, $event),
+            'occurred_at' => $occurredAt,
         ]);
+
+        $this->syncKickUser(
+            data_get($payload, 'banned_user.user_id'),
+            data_get($payload, 'banned_user.username', 'unknown'),
+            null,
+            $occurredAt,
+        );
     }
 
     /**

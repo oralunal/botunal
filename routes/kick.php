@@ -10,6 +10,7 @@ use App\Http\Controllers\Kick\KickOAuthController;
 use App\Http\Controllers\Kick\KickSubscriptionController;
 use App\Http\Controllers\Kick\ModerationController;
 use App\Http\Controllers\Kick\TimerController;
+use App\Http\Controllers\Kick\UserController;
 use App\Http\Controllers\Kick\WebhookController;
 use Illuminate\Support\Facades\Route;
 
@@ -76,6 +77,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Command activity log.
     Route::get('/kick/command-logs', [CommandLogController::class, 'index'])
         ->name('kick.command-logs.index');
+
+    // User registry.
+    Route::get('/kick/users', [UserController::class, 'index'])
+        ->name('kick.users.index');
+    Route::get('/kick/users/{kickUser}', [UserController::class, 'show'])
+        ->name('kick.users.show');
+    Route::delete('/kick/users/{kickUser}/ban', [UserController::class, 'unban'])
+        ->name('kick.users.unban');
 
     // Moderation actions.
     Route::get('/kick/moderation', [ModerationController::class, 'index'])

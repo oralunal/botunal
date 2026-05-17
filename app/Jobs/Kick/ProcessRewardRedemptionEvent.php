@@ -2,17 +2,22 @@
 
 namespace App\Jobs\Kick;
 
+use App\Concerns\SyncsKickUser;
 use App\Models\KickWebhookEvent;
 use App\Models\RewardRedemption;
 use Illuminate\Support\Carbon;
 
 class ProcessRewardRedemptionEvent extends ProcessKickEvent
 {
+    use SyncsKickUser;
+
     /**
      * @param  array<string, mixed>  $payload
      */
     protected function project(array $payload, KickWebhookEvent $event): void
     {
+        $redeemedAt = $this->timestamp($payload, $event);
+
         RewardRedemption::updateOrCreate(
             ['kick_redemption_id' => data_get($payload, 'id')],
             [
@@ -22,8 +27,15 @@ class ProcessRewardRedemptionEvent extends ProcessKickEvent
                 'redeemer_username' => data_get($payload, 'redeemer.username', 'unknown'),
                 'user_input' => data_get($payload, 'user_input'),
                 'status' => data_get($payload, 'status'),
-                'redeemed_at' => $this->timestamp($payload, $event),
+                'redeemed_at' => $redeemedAt,
             ],
+        );
+
+        $this->syncKickUser(
+            data_get($payload, 'redeemer.user_id'),
+            data_get($payload, 'redeemer.username', 'unknown'),
+            null,
+            $redeemedAt,
         );
     }
 

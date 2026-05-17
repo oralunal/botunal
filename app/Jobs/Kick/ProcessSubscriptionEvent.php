@@ -2,12 +2,15 @@
 
 namespace App\Jobs\Kick;
 
+use App\Concerns\SyncsKickUser;
 use App\Models\KickSubscription;
 use App\Models\KickWebhookEvent;
 use Illuminate\Support\Carbon;
 
 class ProcessSubscriptionEvent extends ProcessKickEvent
 {
+    use SyncsKickUser;
+
     /**
      * @param  array<string, mixed>  $payload
      */
@@ -20,6 +23,7 @@ class ProcessSubscriptionEvent extends ProcessKickEvent
         };
 
         $giftees = data_get($payload, 'giftees', []);
+        $occurredAt = $this->timestamp($payload, $event);
 
         KickSubscription::create([
             'type' => $type,
@@ -29,8 +33,15 @@ class ProcessSubscriptionEvent extends ProcessKickEvent
             'tier' => data_get($payload, 'tier'),
             'duration' => data_get($payload, 'duration'),
             'quantity' => $type === KickSubscription::TYPE_GIFT ? count($giftees) : null,
-            'occurred_at' => $this->timestamp($payload, $event),
+            'occurred_at' => $occurredAt,
         ]);
+
+        $this->syncKickUser(
+            data_get($payload, 'subscriber.user_id'),
+            data_get($payload, 'subscriber.username'),
+            null,
+            $occurredAt,
+        );
     }
 
     /**
