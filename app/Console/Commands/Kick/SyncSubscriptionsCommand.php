@@ -32,14 +32,19 @@ class SyncSubscriptionsCommand extends Command
         }
 
         foreach ($remote as $sub) {
+            $kickSubscriptionId = $sub['id'] ?? $sub['subscription_id'] ?? null;
+
+            if ($kickSubscriptionId === null) {
+                continue;
+            }
+
             KickEventSubscription::updateOrCreate(
+                ['kick_subscription_id' => $kickSubscriptionId],
                 [
-                    'event_name' => $sub['name'] ?? $sub['event'] ?? '',
-                    'event_version' => $sub['version'] ?? 1,
+                    'event_name' => $sub['name'] ?? $sub['event'] ?? data_get($sub, 'event.name', ''),
+                    'event_version' => $sub['version'] ?? data_get($sub, 'event.version', 1),
+                    'method' => $sub['method'] ?? 'webhook',
                     'broadcaster_user_id' => $sub['broadcaster_user_id'] ?? null,
-                ],
-                [
-                    'kick_subscription_id' => $sub['id'] ?? null,
                     'status' => KickEventSubscription::STATUS_ACTIVE,
                     'last_synced_at' => now(),
                 ],

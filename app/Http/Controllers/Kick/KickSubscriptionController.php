@@ -8,6 +8,7 @@ use App\Models\KickEventSubscription;
 use App\Services\Kick\KickApiClient;
 use App\Services\Kick\KickEventMap;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
@@ -39,24 +40,13 @@ class KickSubscriptionController extends Controller
             $result = $this->api->createSubscription(KickEventMap::subscribable());
 
             foreach ($result['data'] ?? [] as $subscription) {
-                KickEventSubscription::updateOrCreate(
-                    [
-                        'event_name' => $subscription['name'] ?? $subscription['event'] ?? '',
-                        'event_version' => $subscription['version'] ?? 1,
-                        'broadcaster_user_id' => $subscription['broadcaster_user_id'] ?? null,
-                    ],
-                    [
-                        'kick_subscription_id' => $subscription['id'] ?? $subscription['subscription_id'] ?? null,
-                        'status' => KickEventSubscription::STATUS_ACTIVE,
-                        'last_synced_at' => now(),
-                    ],
-                );
+                $this->upsert($subscription);
             }
 
             $this->toast('success', __('Subscribed to all Kick events.'));
         } catch (Throwable $e) {
             report($e);
-            $this->toast('error', __('Could not create subscriptions. Check the channel connection.'));
+            $this->toast('error', __('Could not create subscriptions: :error', ['error' => $this->reason($e)]));
         }
 
         return to_route('kick.subscriptions');
@@ -70,32 +60,22 @@ class KickSubscriptionController extends Controller
         try {
             $remote = collect($this->api->listSubscriptions());
 
-            $remote->each(function (array $sub): void {
-                KickEventSubscription::updateOrCreate(
-                    [
-                        'event_name' => $sub['name'] ?? $sub['event'] ?? '',
-                        'event_version' => $sub['version'] ?? 1,
-                        'broadcaster_user_id' => $sub['broadcaster_user_id'] ?? null,
-                    ],
-                    [
-                        'kick_subscription_id' => $sub['id'] ?? null,
-                        'status' => KickEventSubscription::STATUS_ACTIVE,
-                        'last_synced_at' => now(),
-                    ],
-                );
-            });
+            $remote->each(fn (array $sub) => $this->upsert($sub));
 
-            $remoteIds = $remote->pluck('id')->filter()->all();
+            $remoteIds = $remote
+                ->map(fn (array $sub): ?string => $sub['id'] ?? null)
+                ->filter()
+                ->all();
 
             KickEventSubscription::query()
                 ->whereNotNull('kick_subscription_id')
-                ->whereNotIn('kick_subscription_id', $remoteIds)
+                ->when($remoteIds !== [], fn ($query) => $query->whereNotIn('kick_subscription_id', $remoteIds))
                 ->update(['status' => KickEventSubscription::STATUS_DELETED]);
 
             $this->toast('success', __('Subscriptions synced with Kick.'));
         } catch (Throwable $e) {
             report($e);
-            $this->toast('error', __('Sync failed. Check the channel connection.'));
+            $this->toast('error', __('Sync failed: :error', ['error' => $this->reason($e)]));
         }
 
         return to_route('kick.subscriptions');
@@ -115,10 +95,46 @@ class KickSubscriptionController extends Controller
             $this->toast('success', __('Subscription removed.'));
         } catch (Throwable $e) {
             report($e);
-            $this->toast('error', __('Could not remove the subscription.'));
+            $this->toast('error', __('Could not remove the subscription: :error', ['error' => $this->reason($e)]));
         }
 
         return to_route('kick.subscriptions');
+    }
+
+    /**
+     * Upsert a remote subscription keyed on Kick's own subscription id (the
+     * only reliably unique field). Entries without an id are skipped so the
+     * unique constraint can never be violated.
+     *
+     * @param  array<string, mixed>  $sub
+     */
+    private function upsert(array $sub): void
+    {
+        $kickSubscriptionId = $sub['id'] ?? $sub['subscription_id'] ?? null;
+
+        if ($kickSubscriptionId === null) {
+            return;
+        }
+
+        KickEventSubscription::updateOrCreate(
+            ['kick_subscription_id' => $kickSubscriptionId],
+            [
+                'event_name' => $sub['name'] ?? $sub['event'] ?? data_get($sub, 'event.name', ''),
+                'event_version' => $sub['version'] ?? data_get($sub, 'event.version', 1),
+                'method' => $sub['method'] ?? 'webhook',
+                'broadcaster_user_id' => $sub['broadcaster_user_id'] ?? null,
+                'status' => KickEventSubscription::STATUS_ACTIVE,
+                'last_synced_at' => now(),
+            ],
+        );
+    }
+
+    /**
+     * A short, safe error string for the user-facing toast.
+     */
+    private function reason(Throwable $e): string
+    {
+        return Str::limit($e->getMessage(), 180);
     }
 
     private function toast(string $type, string $message): void
