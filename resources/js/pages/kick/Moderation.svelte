@@ -1,6 +1,7 @@
 <script lang="ts">
     import { router } from '@inertiajs/svelte';
     import AppHead from '@/components/AppHead.svelte';
+    import UserLink from '@/components/kick/UserLink.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
@@ -111,8 +112,11 @@
                     >
                         {formatIstanbul(row.occurred_at)}
                     </td>
-                    <td class="px-3 py-2 font-medium">
-                        {row.target_username}
+                    <td class="px-3 py-2">
+                        <UserLink
+                            username={row.target_username}
+                            class="font-medium"
+                        />
                     </td>
                     <td class="px-3 py-2">
                         <Badge
@@ -123,7 +127,9 @@
                             {row.action}
                         </Badge>
                     </td>
-                    <td class="px-3 py-2">{row.moderator_username ?? '—'}</td>
+                    <td class="px-3 py-2">
+                        <UserLink username={row.moderator_username} />
+                    </td>
                     <td class="px-3 py-2">{row.source}</td>
                     <td class="px-3 py-2 text-muted-foreground">
                         {row.reason ?? '—'}

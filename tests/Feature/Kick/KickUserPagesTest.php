@@ -154,3 +154,36 @@ test('the detail page 404s for an unknown user', function () {
 
     $this->get(route('kick.users.show', 999999))->assertNotFound();
 });
+
+test('a username links through to the detail page (case-insensitive)', function () {
+    $user = KickUser::factory()->create(['username' => 'CoolUser']);
+    $this->actingAs(User::factory()->create());
+
+    $this->get(route('kick.users.lookup', 'cooluser'))
+        ->assertRedirect(route('kick.users.show', $user));
+});
+
+test('a former username resolves to the current user', function () {
+    $user = KickUser::factory()->create(['kick_user_id' => 1234, 'username' => 'newname']);
+    KickUserNameChange::create([
+        'kick_user_id' => 1234,
+        'previous_username' => 'oldname',
+        'new_username' => 'newname',
+        'changed_at' => now(),
+    ]);
+    $this->actingAs(User::factory()->create());
+
+    $this->get(route('kick.users.lookup', 'oldname'))
+        ->assertRedirect(route('kick.users.show', $user));
+});
+
+test('an unknown username redirects to the filtered list', function () {
+    $this->actingAs(User::factory()->create());
+
+    $this->get(route('kick.users.lookup', 'ghost'))
+        ->assertRedirect(route('kick.users.index', ['username' => 'ghost']));
+});
+
+test('username lookup requires authentication', function () {
+    $this->get(route('kick.users.lookup', 'whoever'))->assertRedirect(route('login'));
+});

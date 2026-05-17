@@ -2,6 +2,7 @@
     import { router } from '@inertiajs/svelte';
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
+    import UserLink from '@/components/kick/UserLink.svelte';
     import { Button } from '@/components/ui/button';
     import { formatIstanbul } from '@/lib/datetime';
     import { usePoll } from '@/lib/kick-poll.svelte';
@@ -73,9 +74,15 @@
                 <tr class="border-t">
                     {#each columns as column (column)}
                         <td class="px-3 py-2">
-                            {column.endsWith('_at')
-                                ? formatIstanbul(row[column] as string | null)
-                                : display(row[column])}
+                            {#if column.endsWith('_at')}
+                                {formatIstanbul(row[column] as string | null)}
+                            {:else if column.endsWith('_username')}
+                                <UserLink
+                                    username={row[column] as string | null}
+                                />
+                            {:else}
+                                {display(row[column])}
+                            {/if}
                         </td>
                     {/each}
                 </tr>

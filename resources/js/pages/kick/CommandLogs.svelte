@@ -1,6 +1,7 @@
 <script lang="ts">
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
+    import UserLink from '@/components/kick/UserLink.svelte';
     import { Badge } from '@/components/ui/badge';
     import { formatIstanbul } from '@/lib/datetime';
     import { usePoll } from '@/lib/kick-poll.svelte';
@@ -50,8 +51,11 @@
                     >
                         {formatIstanbul(log.occurred_at)}
                     </td>
-                    <td class="px-3 py-2 font-medium">
-                        {log.invoker_username}
+                    <td class="px-3 py-2">
+                        <UserLink
+                            username={log.invoker_username}
+                            class="font-medium"
+                        />
                     </td>
                     <td class="px-3 py-2">{log.raw_message}</td>
                     <td class="px-3 py-2 text-muted-foreground">

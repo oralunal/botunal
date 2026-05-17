@@ -81,6 +81,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // User registry.
     Route::get('/kick/users', [UserController::class, 'index'])
         ->name('kick.users.index');
+    Route::get('/kick/users/lookup/{username}', [UserController::class, 'lookup'])
+        ->name('kick.users.lookup');
     Route::get('/kick/users/{kickUser}', [UserController::class, 'show'])
         ->name('kick.users.show');
     Route::delete('/kick/users/{kickUser}/ban', [UserController::class, 'unban'])

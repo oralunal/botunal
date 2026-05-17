@@ -2,6 +2,7 @@
     import { router } from '@inertiajs/svelte';
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
+    import UserLink from '@/components/kick/UserLink.svelte';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
     import { Input } from '@/components/ui/input';
@@ -122,8 +123,11 @@
                     >
                         {formatIstanbul(message.sent_at)}
                     </td>
-                    <td class="px-3 py-2 font-medium">
-                        {message.sender_username}
+                    <td class="px-3 py-2">
+                        <UserLink
+                            username={message.sender_username}
+                            class="font-medium"
+                        />
                     </td>
                     <td class="px-3 py-2">{message.content}</td>
                     <td class="px-3 py-2 text-right whitespace-nowrap">

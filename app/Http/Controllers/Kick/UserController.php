@@ -78,6 +78,27 @@ class UserController extends Controller
     }
 
     /**
+     * Resolve a username (current or former) to its detail page. Lets every
+     * page link a displayed username straight to the user without needing the
+     * registry id in the payload.
+     */
+    public function lookup(string $username): RedirectResponse
+    {
+        $user = $this->resolveByUsername($username);
+
+        if ($user === null) {
+            Inertia::flash('toast', [
+                'type' => 'error',
+                'message' => __('No user found for ":name".', ['name' => $username]),
+            ]);
+
+            return redirect()->route('kick.users.index', ['username' => $username]);
+        }
+
+        return redirect()->route('kick.users.show', $user);
+    }
+
+    /**
      * Remove an active ban or timeout for this user.
      */
     public function unban(Request $request, KickUser $kickUser): RedirectResponse
@@ -243,6 +264,47 @@ class UserController extends Controller
         }
 
         return $query->whereRaw("LOWER({$nameColumn}) = ?", [strtolower($kickUser->username)]);
+    }
+
+    /**
+     * Find the registry row for a username: by current name, then by rename
+     * history, then by the most recent chat message that carried an id.
+     */
+    private function resolveByUsername(string $username): ?KickUser
+    {
+        $lower = strtolower(trim($username));
+
+        if ($lower === '' || $lower === 'unknown') {
+            return null;
+        }
+
+        $user = KickUser::query()
+            ->whereRaw('LOWER(username) = ?', [$lower])
+            ->first();
+
+        if ($user !== null) {
+            return $user;
+        }
+
+        $kickUserId = KickUserNameChange::query()
+            ->where(function (Builder $q) use ($lower) {
+                $q->whereRaw('LOWER(previous_username) = ?', [$lower])
+                    ->orWhereRaw('LOWER(new_username) = ?', [$lower]);
+            })
+            ->latest('changed_at')
+            ->value('kick_user_id');
+
+        $kickUserId ??= ChatMessage::query()
+            ->whereRaw('LOWER(sender_username) = ?', [$lower])
+            ->whereNotNull('sender_kick_user_id')
+            ->latest('sent_at')
+            ->value('sender_kick_user_id');
+
+        if ($kickUserId === null) {
+            return null;
+        }
+
+        return KickUser::query()->where('kick_user_id', $kickUserId)->first();
     }
 
     private function ok(string $message): RedirectResponse
