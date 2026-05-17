@@ -53,4 +53,4 @@ jobs:
           ssh -i ~/.ssh/id_deploy -p "$SSH_PORT" \
             -o StrictHostKeyChecking=accept-new \
             "$SSH_USER@$SSH_HOST" \
-            "bash -lc 'set -e; cd \"$DEPLOY_PATH\" && git fetch --all --prune && git reset --hard origin/main && bash scripts/deploy.sh'"
+            "bash -lc 'set -e; cd \"$DEPLOY_PATH\" || { echo \"::error::DEPLOY_PATH not found on server: $DEPLOY_PATH\"; exit 1; }; [ -d .git ] || { echo \"::error::No git repository at \$PWD. Run the one-time server bootstrap: git init && git remote add origin <repo-url> && git fetch origin && git checkout -f -B main origin/main\"; exit 1; }; git fetch --all --prune && git reset --hard origin/main && bash scripts/deploy.sh'"
