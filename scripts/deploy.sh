@@ -17,6 +17,13 @@ export COMPOSER_MEMORY_LIMIT=-1
 # 1. Backend + frontend build happen WITHOUT maintenance mode so the brief
 #    503 window (Kick webhooks must keep getting 200) stays a few seconds.
 composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+# Drop compiled caches left by a previous deploy. `git reset --hard` keeps
+# gitignored bootstrap/cache/*, so a STALE route cache would make the
+# Wayfinder build step below introspect the old route list and skip newly
+# added routes (e.g. kick.users) — breaking `npm run build`.
+"$PHP_BIN" artisan optimize:clear
+
 npm ci
 npm run build   # vite + wayfinder plugin regenerates resources/js/{actions,routes,wayfinder}
 
