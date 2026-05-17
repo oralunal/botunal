@@ -1,0 +1,17 @@
+# Application root — NOT a web docroot.
+# The site is served from the public/ subdirectory (subdomain docroot).
+# This denies any direct web access (e.g. via the primary domain traversing
+# into this folder), protecting .env, storage/, vendor/, .git, etc.
+# Apache only consults this file for requests that descend through this
+# directory from a parent docroot; the subdomain's docroot is public/ (deeper),
+# so normal site traffic is unaffected.
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>
+
+Options -Indexes
