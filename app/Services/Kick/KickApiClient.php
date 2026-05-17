@@ -56,24 +56,32 @@ class KickApiClient
     }
 
     /**
-     * Send a chat message. "bot" uses the bot connection and posts to the
-     * channel attached to that token; "user" posts via the channel token.
+     * Send a chat message.
+     *
+     * The bot connection is the only one that holds the `chat:write` scope, so
+     * it authenticates every send. Mode (config services.kick.send_as):
+     *  - "user" (default): post as the bot account into the channel via
+     *    type=user + the channel's broadcaster_user_id. Verified working.
+     *  - "bot": Kick's type=bot path. Requires the bot account to be a
+     *    registered chatbot for the channel; otherwise Kick returns 500.
      *
      * @return array<string, mixed>
      */
-    public function sendChatMessage(string $content, string $type = 'bot', ?int $broadcasterUserId = null, ?string $replyToMessageId = null): array
+    public function sendChatMessage(string $content, ?string $type = null, ?int $broadcasterUserId = null, ?string $replyToMessageId = null): array
     {
         $content = Str::limit($content, 500, '');
+        $type ??= (string) config('services.kick.send_as', 'user');
+
+        // chat:write lives on the bot connection regardless of mode.
+        $connection = $this->botConnection();
 
         if ($type === 'bot') {
-            $connection = $this->botConnection();
             $body = ['content' => $content, 'type' => 'bot'];
         } else {
-            $connection = $this->channelConnection();
             $body = [
                 'content' => $content,
                 'type' => 'user',
-                'broadcaster_user_id' => $broadcasterUserId ?? $connection->broadcaster_user_id,
+                'broadcaster_user_id' => $broadcasterUserId ?? KickConnection::channel()?->broadcaster_user_id,
             ];
         }
 

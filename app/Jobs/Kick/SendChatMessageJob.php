@@ -27,7 +27,7 @@ class SendChatMessageJob implements ShouldQueue
 
     public function handle(KickApiClient $api): void
     {
-        $type = $this->sendAs ?? (string) config('services.kick.send_as', 'bot');
+        $type = $this->sendAs ?? (string) config('services.kick.send_as', 'user');
 
         // Respect a conservative outbound chat rate to avoid Kick throttling.
         $allowed = RateLimiter::attempt(

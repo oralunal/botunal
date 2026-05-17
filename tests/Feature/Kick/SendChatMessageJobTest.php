@@ -8,33 +8,46 @@ use Illuminate\Support\Facades\Http;
 beforeEach(function () {
     config()->set('services.kick.client_id', 'cid');
     config()->set('services.kick.client_secret', 'secret');
-});
-
-test('the bot path posts with type=bot and no broadcaster id', function () {
-    KickConnection::factory()->bot()->create();
 
     Http::fake([
         'api.kick.com/public/v1/chat' => Http::response(['data' => ['message_id' => 'm1', 'is_sent' => true]]),
     ]);
-
-    (new SendChatMessageJob('hello world', sendAs: 'bot'))->handle(app(KickApiClient::class));
-
-    Http::assertSent(function ($request) {
-        return $request->url() === 'https://api.kick.com/public/v1/chat'
-            && $request['type'] === 'bot'
-            && $request['content'] === 'hello world'
-            && ! isset($request['broadcaster_user_id']);
-    });
 });
 
-test('the channel path posts with type=user and broadcaster id', function () {
+test('every send authenticates with the bot connection (the chat:write holder)', function () {
+    $bot = KickConnection::factory()->bot()->create();
     KickConnection::factory()->channel()->create(['broadcaster_user_id' => 777]);
-
-    Http::fake([
-        'api.kick.com/public/v1/chat' => Http::response(['data' => ['message_id' => 'm2', 'is_sent' => true]]),
-    ]);
 
     (new SendChatMessageJob('hi', sendAs: 'user'))->handle(app(KickApiClient::class));
 
-    Http::assertSent(fn ($request) => $request['type'] === 'user' && $request['broadcaster_user_id'] === 777);
+    Http::assertSent(fn ($request) => $request->hasHeader('Authorization', 'Bearer '.$bot->access_token));
+});
+
+test('user mode posts type=user with the channel broadcaster id', function () {
+    KickConnection::factory()->bot()->create();
+    KickConnection::factory()->channel()->create(['broadcaster_user_id' => 777]);
+
+    (new SendChatMessageJob('hi', sendAs: 'user'))->handle(app(KickApiClient::class));
+
+    Http::assertSent(fn ($request) => $request['type'] === 'user'
+        && $request['broadcaster_user_id'] === 777
+        && $request['content'] === 'hi');
+});
+
+test('the default send mode comes from config (user)', function () {
+    config()->set('services.kick.send_as', 'user');
+    KickConnection::factory()->bot()->create();
+    KickConnection::factory()->channel()->create(['broadcaster_user_id' => 555]);
+
+    (new SendChatMessageJob('default mode'))->handle(app(KickApiClient::class));
+
+    Http::assertSent(fn ($request) => $request['type'] === 'user' && $request['broadcaster_user_id'] === 555);
+});
+
+test('bot mode is still supported via config for properly-registered chatbots', function () {
+    KickConnection::factory()->bot()->create();
+
+    (new SendChatMessageJob('hello', sendAs: 'bot'))->handle(app(KickApiClient::class));
+
+    Http::assertSent(fn ($request) => $request['type'] === 'bot' && ! isset($request['broadcaster_user_id']));
 });

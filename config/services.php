@@ -41,7 +41,7 @@ return [
         'redirect_uri' => env('KICK_REDIRECT_URI', env('APP_URL').'/kick/oauth/callback'),
         'channel_slug' => env('KICK_CHANNEL_SLUG', 'trolunal'),
         'bot_slug' => env('KICK_BOT_SLUG', 'botunal'),
-        'send_as' => env('KICK_SEND_AS', 'bot'),
+        'send_as' => env('KICK_SEND_AS', 'user'),
         'command_prefix' => env('KICK_COMMAND_PREFIX', '!'),
         'webhook_tolerance_seconds' => (int) env('KICK_WEBHOOK_TOLERANCE', 300),
         'public_key_cache_ttl' => (int) env('KICK_PUBLIC_KEY_TTL', 86400),
