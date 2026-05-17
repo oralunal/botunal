@@ -122,15 +122,22 @@ class KickApiClient
     }
 
     /**
-     * Delete a webhook event subscription by Kick subscription id.
+     * Delete one or more webhook event subscriptions by Kick subscription id.
+     *
+     * Kick expects repeated `id=` query params (Go-style array). Laravel's
+     * withQueryParameters would emit `id[0]=` which Kick rejects with 400, so
+     * the query string is built explicitly here.
      *
      * @return array<string, mixed>
      */
-    public function deleteSubscription(string $subscriptionId): array
+    public function deleteSubscription(string ...$subscriptionIds): array
     {
-        return $this->request($this->channelConnection(), 'delete', '/events/subscriptions', [
-            'query' => ['id' => [$subscriptionId]],
-        ]);
+        $query = implode('&', array_map(
+            fn (string $id): string => 'id='.rawurlencode($id),
+            $subscriptionIds,
+        ));
+
+        return $this->request($this->channelConnection(), 'delete', '/events/subscriptions?'.$query);
     }
 
     /**

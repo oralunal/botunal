@@ -102,6 +102,38 @@ test('a failing Kick API surfaces the error and redirects without a 500', functi
     expect(KickEventSubscription::count())->toBe(0);
 });
 
+test('destroy deletes on Kick with repeated id= query (not id[0]=) and removes the local row', function () {
+    $sub = KickEventSubscription::factory()->create(['kick_subscription_id' => 'sub-A']);
+
+    Http::fake([
+        'api.kick.com/public/v1/events/subscriptions*' => Http::response(['data' => []], 200),
+    ]);
+
+    $this->delete(route('kick.subscriptions.destroy', $sub))
+        ->assertRedirect(route('kick.subscriptions'));
+
+    Http::assertSent(function ($request) {
+        return $request->method() === 'DELETE'
+            && str_contains($request->url(), 'id=sub-A')
+            && ! str_contains(rawurldecode($request->url()), 'id[');
+    });
+
+    expect(KickEventSubscription::find($sub->id))->toBeNull();
+});
+
+test('destroy keeps the local row and surfaces the error when Kick rejects', function () {
+    $sub = KickEventSubscription::factory()->create(['kick_subscription_id' => 'sub-A']);
+
+    Http::fake([
+        'api.kick.com/public/v1/events/subscriptions*' => Http::response(['message' => 'Invalid request'], 400),
+    ]);
+
+    $this->delete(route('kick.subscriptions.destroy', $sub))
+        ->assertRedirect(route('kick.subscriptions'));
+
+    expect(KickEventSubscription::find($sub->id))->not->toBeNull();
+});
+
 test('subscription routes require authentication', function () {
     auth()->logout();
 
