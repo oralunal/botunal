@@ -2,6 +2,7 @@
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
     import { Badge } from '@/components/ui/badge';
+    import { formatIstanbul } from '@/lib/datetime';
     import { usePoll } from '@/lib/kick-poll.svelte';
     import type { Paginated } from '@/types/kick';
 
@@ -47,7 +48,7 @@
                     <td
                         class="px-3 py-2 whitespace-nowrap text-muted-foreground"
                     >
-                        {log.occurred_at ?? '—'}
+                        {formatIstanbul(log.occurred_at)}
                     </td>
                     <td class="px-3 py-2 font-medium">
                         {log.invoker_username}

@@ -6,6 +6,7 @@
     import { Card, CardContent } from '@/components/ui/card';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
+    import { formatIstanbul } from '@/lib/datetime';
     import { usePoll } from '@/lib/kick-poll.svelte';
     import { messages as messagesRoute } from '@/routes/kick';
     import { ban, message as deleteMessage } from '@/routes/kick/moderation';
@@ -119,7 +120,7 @@
                     <td
                         class="px-3 py-2 whitespace-nowrap text-muted-foreground"
                     >
-                        {message.sent_at ?? '—'}
+                        {formatIstanbul(message.sent_at)}
                     </td>
                     <td class="px-3 py-2 font-medium">
                         {message.sender_username}

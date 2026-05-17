@@ -3,6 +3,7 @@
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
     import { Button } from '@/components/ui/button';
+    import { formatIstanbul } from '@/lib/datetime';
     import { usePoll } from '@/lib/kick-poll.svelte';
     import { events as eventsRoute } from '@/routes/kick';
     import type { Paginated } from '@/types/kick';
@@ -71,7 +72,11 @@
             {#each events.data as row (row.id)}
                 <tr class="border-t">
                     {#each columns as column (column)}
-                        <td class="px-3 py-2">{display(row[column])}</td>
+                        <td class="px-3 py-2">
+                            {column.endsWith('_at')
+                                ? formatIstanbul(row[column] as string | null)
+                                : display(row[column])}
+                        </td>
                     {/each}
                 </tr>
             {:else}

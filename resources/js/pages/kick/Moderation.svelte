@@ -6,6 +6,7 @@
     import { Card, CardContent } from '@/components/ui/card';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
+    import { formatIstanbul } from '@/lib/datetime';
     import { usePoll } from '@/lib/kick-poll.svelte';
     import { ban, unban } from '@/routes/kick/moderation';
 
@@ -108,7 +109,7 @@
                     <td
                         class="px-3 py-2 whitespace-nowrap text-muted-foreground"
                     >
-                        {row.occurred_at ?? '—'}
+                        {formatIstanbul(row.occurred_at)}
                     </td>
                     <td class="px-3 py-2 font-medium">
                         {row.target_username}
