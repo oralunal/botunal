@@ -3,6 +3,7 @@
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
     import UserLink from '@/components/kick/UserLink.svelte';
+    import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
     import { Input } from '@/components/ui/input';
@@ -129,15 +130,28 @@
                             class="font-medium"
                         />
                     </td>
-                    <td class="px-3 py-2">{message.content}</td>
+                    <td
+                        class="px-3 py-2 {message.deleted_at
+                            ? 'text-muted-foreground line-through'
+                            : ''}"
+                    >
+                        {message.content}
+                        {#if message.deleted_at}
+                            <Badge variant="secondary" class="ml-2 no-underline"
+                                >silindi</Badge
+                            >
+                        {/if}
+                    </td>
                     <td class="px-3 py-2 text-right whitespace-nowrap">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onclick={() => removeMessage(message)}
-                        >
-                            Delete
-                        </Button>
+                        {#if !message.deleted_at}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onclick={() => removeMessage(message)}
+                            >
+                                Delete
+                            </Button>
+                        {/if}
                         <Button
                             variant="ghost"
                             size="sm"

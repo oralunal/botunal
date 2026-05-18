@@ -12,6 +12,7 @@ use App\Http\Controllers\Kick\ModerationController;
 use App\Http\Controllers\Kick\TimerController;
 use App\Http\Controllers\Kick\UserController;
 use App\Http\Controllers\Kick\WebhookController;
+use App\Http\Controllers\Kick\WikiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -77,6 +78,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Command activity log.
     Route::get('/kick/command-logs', [CommandLogController::class, 'index'])
         ->name('kick.command-logs.index');
+
+    // DBD wiki / glossary.
+    Route::get('/kick/wiki', [WikiController::class, 'index'])
+        ->name('kick.wiki.index');
+    Route::post('/kick/wiki', [WikiController::class, 'store'])
+        ->name('kick.wiki.store');
+    Route::put('/kick/wiki/{wikiEntry}', [WikiController::class, 'update'])
+        ->name('kick.wiki.update');
+    Route::delete('/kick/wiki/{wikiEntry}', [WikiController::class, 'destroy'])
+        ->name('kick.wiki.destroy');
 
     // User registry.
     Route::get('/kick/users', [UserController::class, 'index'])

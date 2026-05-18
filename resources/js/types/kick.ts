@@ -29,6 +29,7 @@ export type ChatMessageRow = {
     content: string;
     is_command: boolean;
     sent_at: string | null;
+    deleted_at: string | null;
 };
 
 export type FeedItem = {
@@ -103,4 +104,24 @@ export type UserEventItem = {
 export type UserEvents = {
     items: UserEventItem[];
     truncated: boolean;
+};
+
+export type WikiAliasRow = {
+    id: number;
+    alias: string;
+};
+
+export type WikiEntryRow = {
+    id: number;
+    type: 'killer' | 'survivor' | 'perk' | 'power' | 'addon' | 'term';
+    name_en: string;
+    name_tr: string | null;
+    owner: string | null;
+    role: 'survivor' | 'killer' | null;
+    description_tr: string | null;
+    description_en: string | null;
+    source_url: string | null;
+    is_enabled: boolean;
+    is_curated: boolean;
+    aliases: WikiAliasRow[];
 };

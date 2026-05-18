@@ -7,6 +7,7 @@ use App\Services\Kick\BuiltIns\CounterCommand;
 use App\Services\Kick\BuiltIns\FollowageCommand;
 use App\Services\Kick\BuiltIns\ShoutoutCommand;
 use App\Services\Kick\BuiltIns\UptimeCommand;
+use App\Services\Kick\BuiltIns\WikiCommand;
 use App\Services\Kick\Contracts\BuiltInCommand;
 
 /**
@@ -25,6 +26,7 @@ class BuiltInCommandRegistry
             'counter' => CounterCommand::class,
             'followage' => FollowageCommand::class,
             'shoutout' => ShoutoutCommand::class,
+            'wiki' => WikiCommand::class,
         ];
     }
 

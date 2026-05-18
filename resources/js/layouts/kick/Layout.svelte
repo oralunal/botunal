@@ -18,6 +18,7 @@
     import { index as moderationIndex } from '@/routes/kick/moderation';
     import { index as timersIndex } from '@/routes/kick/timers';
     import { index as usersIndex } from '@/routes/kick/users';
+    import { index as wikiIndex } from '@/routes/kick/wiki';
     import type { NavItem } from '@/types';
 
     let {
@@ -37,6 +38,7 @@
         { title: 'Command logs', href: commandLogsIndex() },
         { title: 'Moderation', href: moderationIndex() },
         { title: 'Users', href: usersIndex() },
+        { title: 'Wiki', href: wikiIndex() },
     ];
 
     const url = currentUrlState();

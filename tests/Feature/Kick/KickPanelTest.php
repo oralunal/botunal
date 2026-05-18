@@ -43,6 +43,17 @@ test('messages page paginates and filters by username', function () {
         ->assertInertia(fn ($page) => $page->has('messages.data', 1));
 });
 
+test('the messages page exposes deleted_at so deleted rows can be flagged', function () {
+    ChatMessage::factory()->create(['sender_username' => 'gone', 'deleted_at' => now()]);
+    $this->actingAs(User::factory()->create());
+
+    $this->get(route('kick.messages', ['username' => 'gone']))
+        ->assertInertia(fn ($page) => $page
+            ->component('kick/Messages')
+            ->where('messages.data.0.deleted_at', fn ($v) => $v !== null)
+        );
+});
+
 test('events page switches projection by type', function () {
     KickFollow::factory()->count(3)->create();
     $this->actingAs(User::factory()->create());
