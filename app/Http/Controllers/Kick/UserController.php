@@ -12,6 +12,7 @@ use App\Models\KickUser;
 use App\Models\KickUserNameChange;
 use App\Models\RewardRedemption;
 use App\Services\Kick\KickApiClient;
+use App\Services\Kick\KickApiException;
 use App\Services\Kick\KickResolver;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -109,6 +110,10 @@ class UserController extends Controller
 
         try {
             $this->api->unbanUser($this->resolver->broadcasterUserId(), $kickUser->kick_user_id);
+        } catch (KickApiException $e) {
+            report($e);
+
+            return $this->fail($e->userMessage());
         } catch (Throwable $e) {
             report($e);
 

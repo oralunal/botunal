@@ -7,6 +7,7 @@ use App\Http\Requests\Kick\BanRequest;
 use App\Models\ChatMessage;
 use App\Models\KickBan;
 use App\Services\Kick\KickApiClient;
+use App\Services\Kick\KickApiException;
 use App\Services\Kick\KickResolver;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -47,6 +48,10 @@ class ModerationController extends Controller
 
         try {
             $this->api->banUser($this->resolver->broadcasterUserId(), $userId, $duration, $data['reason'] ?? null);
+        } catch (KickApiException $e) {
+            report($e);
+
+            return $this->fail($e->userMessage());
         } catch (Throwable $e) {
             report($e);
 
@@ -81,6 +86,10 @@ class ModerationController extends Controller
 
         try {
             $this->api->unbanUser($this->resolver->broadcasterUserId(), $userId);
+        } catch (KickApiException $e) {
+            report($e);
+
+            return $this->fail($e->userMessage());
         } catch (Throwable $e) {
             report($e);
 
@@ -108,6 +117,10 @@ class ModerationController extends Controller
 
         try {
             $this->api->deleteChatMessage($messageId);
+        } catch (KickApiException $e) {
+            report($e);
+
+            return $this->fail($e->userMessage());
         } catch (Throwable $e) {
             report($e);
 

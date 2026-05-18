@@ -211,9 +211,7 @@ class KickApiClient
         }
 
         if ($response->failed()) {
-            throw new RuntimeException(
-                "Kick API {$method} {$path} failed [{$response->status()}]: ".$response->body()
-            );
+            throw new KickApiException($method, $path, $response->status(), $response->body());
         }
 
         return $response->json() ?? [];

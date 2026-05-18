@@ -3,6 +3,7 @@
 use App\Models\KickConnection;
 use App\Models\KickEventSubscription;
 use App\Models\User;
+use App\Services\Kick\KickApiException;
 use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Http;
 
@@ -98,7 +99,7 @@ test('a failing Kick API surfaces the error and redirects without a 500', functi
     $this->post(route('kick.subscriptions.sync'))
         ->assertRedirect(route('kick.subscriptions'));
 
-    Exceptions::assertReported(RuntimeException::class);
+    Exceptions::assertReported(KickApiException::class);
     expect(KickEventSubscription::count())->toBe(0);
 });
 
