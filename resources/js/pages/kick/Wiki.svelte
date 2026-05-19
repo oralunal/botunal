@@ -26,7 +26,7 @@
     } = $props();
 
     const perms = $derived(
-        ($page.props.auth?.permissions ?? []) as string[],
+        (page.props.auth?.permissions ?? []) as string[],
     );
     const canCreate = $derived(perms.includes('wiki.create'));
     const canEdit = $derived(perms.includes('wiki.edit'));

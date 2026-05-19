@@ -74,7 +74,7 @@
     ];
 
     const perms = $derived(
-        ($page.props.auth?.permissions ?? []) as string[],
+        (page.props.auth?.permissions ?? []) as string[],
     );
     const visibleNavItems = $derived(
         sidebarNavItems.filter(
