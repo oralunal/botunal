@@ -25,11 +25,7 @@
     let selected = $state<Record<number, Set<string>>>({});
 
     function stateFor(user: AdminMemberRow): Set<string> {
-        if (!selected[user.id]) {
-            selected[user.id] = new Set(user.permissions);
-        }
-
-        return selected[user.id];
+        return selected[user.id] ?? new Set(user.permissions);
     }
 
     function isChecked(user: AdminMemberRow, ability: string): boolean {
