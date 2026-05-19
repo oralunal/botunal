@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsurePasswordAccount;
 use App\Http\Middleware\EnsurePermission;
 use App\Http\Middleware\EnsureProfileComplete;
 use App\Http\Middleware\HandleAppearance;
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'kick.signature' => VerifyKickSignature::class,
             'permission' => EnsurePermission::class,
             'profile.complete' => EnsureProfileComplete::class,
+            'password.account' => EnsurePasswordAccount::class,
         ]);
 
         $middleware->preventRequestForgery(except: [

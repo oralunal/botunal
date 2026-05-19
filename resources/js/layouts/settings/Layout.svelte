@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, page } from '@inertiajs/svelte';
     import type { Snippet } from 'svelte';
     import Heading from '@/components/Heading.svelte';
     import { Button } from '@/components/ui/button';
@@ -17,20 +17,18 @@
         children?: Snippet;
     } = $props();
 
-    const sidebarNavItems: NavItem[] = [
-        {
-            title: 'Profil',
-            href: editProfile(),
-        },
-        {
-            title: 'Güvenlik',
-            href: editSecurity(),
-        },
-        {
-            title: 'Görünüm',
-            href: editAppearance(),
-        },
-    ];
+    const isKickMember = $derived(
+        (page.props.auth?.user as { kick_user_id?: number | null } | null)
+            ?.kick_user_id != null,
+    );
+
+    const sidebarNavItems = $derived<NavItem[]>([
+        { title: 'Profil', href: editProfile() },
+        ...(isKickMember
+            ? []
+            : [{ title: 'Güvenlik', href: editSecurity() }]),
+        { title: 'Görünüm', href: editAppearance() },
+    ]);
 
     const url = currentUrlState();
 </script>

@@ -112,3 +112,24 @@ test('correct password must be provided to update password', function () {
         ->assertSessionHasErrors('current_password')
         ->assertRedirect(route('security.edit'));
 });
+
+test('security page is forbidden for Kick members', function () {
+    $user = User::factory()->kickMember()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)
+        ->get(route('security.edit'))
+        ->assertForbidden();
+});
+
+test('password update is forbidden for Kick members', function () {
+    $user = User::factory()->kickMember()->create(['email_verified_at' => now()]);
+
+    $this->actingAs($user)
+        ->from(route('security.edit'))
+        ->put(route('user-password.update'), [
+            'current_password' => 'password',
+            'password' => 'new-password',
+            'password_confirmation' => 'new-password',
+        ])
+        ->assertForbidden();
+});
