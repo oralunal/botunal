@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\EnsurePermission;
+use App\Http\Middleware\EnsureProfileComplete;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\VerifyKickSignature;
@@ -26,6 +28,8 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'kick.signature' => VerifyKickSignature::class,
+            'permission' => EnsurePermission::class,
+            'profile.complete' => EnsureProfileComplete::class,
         ]);
 
         $middleware->preventRequestForgery(except: [

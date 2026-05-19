@@ -5,7 +5,6 @@ use App\Models\ChatMessage;
 use App\Models\KickBan;
 use App\Models\KickUser;
 use App\Models\KickUserNameChange;
-use App\Models\User;
 use Illuminate\Http\Request;
 
 /**
@@ -42,7 +41,7 @@ test('the list paginates and is searchable by current and former username', func
         'changed_at' => now(),
     ]);
 
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.users.index'))
         ->assertOk()
@@ -73,7 +72,7 @@ test('the detail page renders identity immediately and defers heavy sections', f
         'changed_at' => now(),
     ]);
 
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.users.show', $user))
         ->assertOk()
@@ -89,7 +88,7 @@ test('the detail page renders identity immediately and defers heavy sections', f
 
 test('ban status reflects the latest moderation record', function () {
     $user = KickUser::factory()->create(['kick_user_id' => 4242]);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     KickBan::factory()->create(['target_kick_user_id' => 4242, 'occurred_at' => now()->subMinutes(5)]);
 
@@ -125,7 +124,7 @@ test('deleted messages are filterable and never hidden by default', function () 
         'deleted_at' => now(),
     ]);
 
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     loadDeferred($this, route('kick.users.show', $user), ['messages'])
         ->assertOk()
@@ -141,7 +140,7 @@ test('the activity timeline is deferred and merged across sources', function () 
     ChatMessage::factory()->create(['sender_kick_user_id' => 70]);
     KickBan::factory()->create(['target_kick_user_id' => 70]);
 
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     loadDeferred($this, route('kick.users.show', $user), ['events'])
         ->assertOk()
@@ -150,14 +149,14 @@ test('the activity timeline is deferred and merged across sources', function () 
 });
 
 test('the detail page 404s for an unknown user', function () {
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.users.show', 999999))->assertNotFound();
 });
 
 test('a username links through to the detail page (case-insensitive)', function () {
     $user = KickUser::factory()->create(['username' => 'CoolUser']);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.users.lookup', 'cooluser'))
         ->assertRedirect(route('kick.users.show', $user));
@@ -171,14 +170,14 @@ test('a former username resolves to the current user', function () {
         'new_username' => 'newname',
         'changed_at' => now(),
     ]);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.users.lookup', 'oldname'))
         ->assertRedirect(route('kick.users.show', $user));
 });
 
 test('an unknown username redirects to the filtered list', function () {
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.users.lookup', 'ghost'))
         ->assertRedirect(route('kick.users.index', ['username' => 'ghost']));

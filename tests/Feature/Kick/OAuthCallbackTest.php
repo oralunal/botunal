@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\KickConnection;
-use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -10,7 +9,7 @@ beforeEach(function () {
     config()->set('services.kick.client_id', 'client-id');
     config()->set('services.kick.client_secret', 'client-secret');
     config()->set('services.kick.channel_slug', 'trolunal');
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 });
 
 test('redirect stores PKCE state and sends the user to Kick', function () {

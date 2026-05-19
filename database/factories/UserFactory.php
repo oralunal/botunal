@@ -47,6 +47,31 @@ class UserFactory extends Factory
     }
 
     /**
+     * Indicate that the model is a Kick OAuth member.
+     */
+    public function kickMember(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'kick_user_id' => fake()->unique()->numberBetween(1_000_000, 9_999_999),
+            'kick_username' => fake()->userName(),
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'password' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the model has an incomplete profile.
+     */
+    public function incompleteProfile(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'first_name' => null,
+            'last_name' => null,
+        ]);
+    }
+
+    /**
      * Indicate that the model has two-factor authentication configured.
      */
     public function withTwoFactor(): static

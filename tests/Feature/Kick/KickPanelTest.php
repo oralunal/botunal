@@ -3,7 +3,6 @@
 use App\Models\ChatMessage;
 use App\Models\KickConnection;
 use App\Models\KickFollow;
-use App\Models\User;
 
 test('kick panel pages require authentication', function () {
     $this->get(route('kick.connections'))->assertRedirect(route('login'));
@@ -13,7 +12,7 @@ test('kick panel pages require authentication', function () {
 
 test('connections page exposes scope status without leaking tokens', function () {
     KickConnection::factory()->channel()->create(['slug' => 'trolunal']);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $response = $this->get(route('kick.connections'));
 
@@ -30,7 +29,7 @@ test('connections page exposes scope status without leaking tokens', function ()
 test('messages page paginates and filters by username', function () {
     ChatMessage::factory()->count(60)->create();
     ChatMessage::factory()->create(['sender_username' => 'targetuser', 'content' => 'findme']);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.messages'))
         ->assertOk()
@@ -45,7 +44,7 @@ test('messages page paginates and filters by username', function () {
 
 test('the messages page exposes deleted_at so deleted rows can be flagged', function () {
     ChatMessage::factory()->create(['sender_username' => 'gone', 'deleted_at' => now()]);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.messages', ['username' => 'gone']))
         ->assertInertia(fn ($page) => $page
@@ -56,7 +55,7 @@ test('the messages page exposes deleted_at so deleted rows can be flagged', func
 
 test('events page switches projection by type', function () {
     KickFollow::factory()->count(3)->create();
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 
     $this->get(route('kick.events', ['type' => 'follows']))
         ->assertOk()

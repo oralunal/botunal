@@ -16,6 +16,7 @@
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
     import { Spinner } from '@/components/ui/spinner';
+    import { redirect as kickRedirect } from '@/routes/auth/kick';
     import { store } from '@/routes/login';
     import { request } from '@/routes/password';
 
@@ -95,3 +96,20 @@
 
     {/snippet}
 </Form>
+
+<div class="relative my-6">
+    <div class="absolute inset-0 flex items-center">
+        <span class="w-full border-t border-border"></span>
+    </div>
+    <div class="relative flex justify-center text-xs uppercase">
+        <span class="bg-background px-2 text-muted-foreground">veya</span>
+    </div>
+</div>
+
+<Button asChild variant="outline" class="w-full">
+    {#snippet children(props)}
+        <a {...props} href={kickRedirect().url} class={props.class}>
+            Kick ile Giriş Yap
+        </a>
+    {/snippet}
+</Button>

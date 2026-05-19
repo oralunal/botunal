@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,7 +45,51 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Create and persist the super administrator (id === 1) with a complete
+ * profile. If a user with id 1 already exists it is returned as-is.
+ */
+function asSuperAdmin(): User
 {
-    // ..
+    $existing = User::find(1);
+
+    if ($existing !== null) {
+        $existing->forceFill([
+            'first_name' => filled($existing->first_name) ? $existing->first_name : 'Super',
+            'last_name' => filled($existing->last_name) ? $existing->last_name : 'Admin',
+            'email' => filled($existing->email) ? $existing->email : 'super-admin@example.com',
+        ])->save();
+
+        return $existing;
+    }
+
+    return User::factory()->create([
+        'first_name' => 'Super',
+        'last_name' => 'Admin',
+    ]);
+}
+
+/**
+ * Create and persist a non super administrator user (guaranteed id !== 1)
+ * granted exactly the given abilities.
+ *
+ * @param  array<int, string>  $abilities
+ */
+function asUserWith(array $abilities): User
+{
+    if (User::find(1) === null) {
+        User::factory()->create([
+            'first_name' => 'Super',
+            'last_name' => 'Admin',
+        ]);
+    }
+
+    $user = User::factory()->create([
+        'first_name' => 'Member',
+        'last_name' => 'User',
+    ]);
+
+    $user->syncPermissions($abilities);
+
+    return $user;
 }

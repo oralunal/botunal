@@ -3,14 +3,15 @@
 use App\Models\KickBan;
 use App\Models\KickConnection;
 use App\Models\KickUser;
-use App\Models\User;
 use Illuminate\Support\Facades\Http;
 
 beforeEach(function () {
     config()->set('services.kick.client_id', 'cid');
     config()->set('services.kick.client_secret', 'secret');
     KickConnection::factory()->channel()->create(['broadcaster_user_id' => 555]);
-    $this->actingAs(User::factory()->create(['name' => 'AdminMod']));
+    $admin = asSuperAdmin();
+    $admin->forceFill(['name' => 'AdminMod'])->save();
+    $this->actingAs($admin);
 });
 
 test('unban from the detail page calls Kick and audits the action', function () {

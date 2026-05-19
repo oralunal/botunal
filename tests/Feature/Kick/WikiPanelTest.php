@@ -1,11 +1,10 @@
 <?php
 
-use App\Models\User;
 use App\Models\WikiAlias;
 use App\Models\WikiEntry;
 
 beforeEach(function () {
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 });
 
 test('the wiki index requires authentication', function () {

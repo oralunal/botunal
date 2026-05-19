@@ -1,4 +1,5 @@
 import { createInertiaApp } from '@inertiajs/svelte';
+import AccountLayout from '@/layouts/account/Layout.svelte';
 import AppLayout from '@/layouts/AppLayout.svelte';
 import AuthLayout from '@/layouts/AuthLayout.svelte';
 import KickLayout from '@/layouts/kick/Layout.svelte';
@@ -20,6 +21,8 @@ createInertiaApp({
                 return [AppLayout, SettingsLayout];
             case name.startsWith('kick/'):
                 return [AppLayout, KickLayout];
+            case name.startsWith('account/'):
+                return [AppLayout, AccountLayout];
             default:
                 return AppLayout;
         }

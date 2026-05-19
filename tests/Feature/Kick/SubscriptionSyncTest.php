@@ -2,7 +2,6 @@
 
 use App\Models\KickConnection;
 use App\Models\KickEventSubscription;
-use App\Models\User;
 use App\Services\Kick\KickApiException;
 use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Facades\Http;
@@ -11,7 +10,7 @@ beforeEach(function () {
     config()->set('services.kick.client_id', 'cid');
     config()->set('services.kick.client_secret', 'secret');
     KickConnection::factory()->channel()->create(['broadcaster_user_id' => 555]);
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 });
 
 test('sync keys on kick_subscription_id and tolerates duplicate event tuples', function () {

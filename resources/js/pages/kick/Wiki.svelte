@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { router } from '@inertiajs/svelte';
+    import { page, router } from '@inertiajs/svelte';
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
     import { Badge } from '@/components/ui/badge';
@@ -24,6 +24,13 @@
         types: string[];
         filters: { search: string | null; type: string | null };
     } = $props();
+
+    const perms = $derived(
+        ($page.props.auth?.permissions ?? []) as string[],
+    );
+    const canCreate = $derived(perms.includes('wiki.create'));
+    const canEdit = $derived(perms.includes('wiki.edit'));
+    const canDelete = $derived(perms.includes('wiki.delete'));
 
     // svelte-ignore state_referenced_locally
     let search = $state(filters.search ?? '');
@@ -117,7 +124,9 @@
 
 <div class="flex items-center justify-between">
     <h2 class="text-lg font-semibold">DBD Wiki</h2>
-    <Button onclick={newEntry}>Yeni kayıt</Button>
+    {#if canCreate}
+        <Button onclick={newEntry}>Yeni kayıt</Button>
+    {/if}
 </div>
 
 <Card class="mt-4">
@@ -151,7 +160,7 @@
     </CardContent>
 </Card>
 
-{#if editing}
+{#if editing && (canCreate || canEdit)}
     <Card class="mt-4">
         <CardContent class="space-y-4 pt-6">
             <div class="grid gap-3 sm:grid-cols-2">
@@ -298,20 +307,24 @@
                         {/if}
                     </td>
                     <td class="px-3 py-2 text-right whitespace-nowrap">
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onclick={() => edit(entry)}
-                        >
-                            Düzenle
-                        </Button>
-                        <Button
-                            variant="ghost"
-                            size="sm"
-                            onclick={() => remove(entry)}
-                        >
-                            Sil
-                        </Button>
+                        {#if canEdit}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onclick={() => edit(entry)}
+                            >
+                                Düzenle
+                            </Button>
+                        {/if}
+                        {#if canDelete}
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onclick={() => remove(entry)}
+                            >
+                                Sil
+                            </Button>
+                        {/if}
                     </td>
                 </tr>
             {:else}

@@ -2,10 +2,9 @@
 
 use App\Models\Command;
 use App\Models\Timer;
-use App\Models\User;
 
 beforeEach(function () {
-    $this->actingAs(User::factory()->create());
+    $this->actingAs(asSuperAdmin());
 });
 
 test('a static command can be created with aliases', function () {
