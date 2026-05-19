@@ -4,7 +4,7 @@
     export const layout = {
         breadcrumbs: [
             {
-                title: 'Security settings',
+                title: 'Güvenlik ayarları',
                 href: edit(),
             },
         ],
@@ -45,15 +45,15 @@
     onDestroy(() => twoFactorAuth.clearTwoFactorAuthData());
 </script>
 
-<AppHead title="Security settings" />
+<AppHead title="Güvenlik ayarları" />
 
-<h1 class="sr-only">Security settings</h1>
+<h1 class="sr-only">Güvenlik ayarları</h1>
 
 <div class="space-y-6">
     <Heading
         variant="small"
-        title="Update password"
-        description="Ensure your account is using a long, random password to stay secure"
+        title="Parolayı güncelle"
+        description="Hesabının güvende kalması için uzun ve rastgele bir parola kullandığından emin ol"
     />
 
     <Form
@@ -65,38 +65,38 @@
     >
         {#snippet children({ errors, processing })}
             <div class="grid gap-2">
-                <Label for="current_password">Current password</Label>
+                <Label for="current_password">Mevcut parola</Label>
                 <PasswordInput
                     id="current_password"
                     name="current_password"
                     class="mt-1 block w-full"
                     autocomplete="current-password"
-                    placeholder="Current password"
+                    placeholder="Mevcut parola"
                 />
                 <InputError message={errors.current_password} />
             </div>
 
             <div class="grid gap-2">
-                <Label for="password">New password</Label>
+                <Label for="password">Yeni parola</Label>
                 <PasswordInput
                     id="password"
                     name="password"
                     class="mt-1 block w-full"
                     autocomplete="new-password"
-                    placeholder="New password"
+                    placeholder="Yeni parola"
                     passwordrules={passwordRules}
                 />
                 <InputError message={errors.password} />
             </div>
 
             <div class="grid gap-2">
-                <Label for="password_confirmation">Confirm password</Label>
+                <Label for="password_confirmation">Parolayı onayla</Label>
                 <PasswordInput
                     id="password_confirmation"
                     name="password_confirmation"
                     class="mt-1 block w-full"
                     autocomplete="new-password"
-                    placeholder="Confirm password"
+                    placeholder="Parolayı onayla"
                     passwordrules={passwordRules}
                 />
                 <InputError message={errors.password_confirmation} />
@@ -108,7 +108,7 @@
                     disabled={processing}
                     data-test="update-password-button"
                 >
-                    Save password
+                    Parolayı kaydet
                 </Button>
             </div>
         {/snippet}
@@ -119,22 +119,22 @@
     <div class="space-y-6">
         <Heading
             variant="small"
-            title="Two-factor authentication"
-            description="Manage your two-factor authentication settings"
+            title="İki adımlı doğrulama"
+            description="İki adımlı doğrulama ayarlarını yönet"
         />
 
         {#if !twoFactorEnabled}
             <div class="flex flex-col items-start justify-start space-y-4">
                 <p class="text-muted-foreground text-sm">
-                    When you enable two-factor authentication, you will be
-                    prompted for a secure pin during login. This pin can be
-                    retrieved from a TOTP-supported application on your phone.
+                    İki adımlı doğrulamayı etkinleştirdiğinde, giriş sırasında
+                    senden güvenli bir PIN istenir. Bu PIN'i telefonundaki
+                    TOTP destekli bir uygulamadan alabilirsin.
                 </p>
 
                 <div>
                     {#if twoFactorAuth.hasSetupData()}
                         <Button onclick={() => (showSetupModal = true)}>
-                            <ShieldCheck class="size-4" />Continue setup
+                            <ShieldCheck class="size-4" />Kuruluma devam et
                         </Button>
                     {:else}
                         <Form
@@ -143,7 +143,7 @@
                         >
                             {#snippet children({ processing })}
                                 <Button type="submit" disabled={processing}>
-                                    Enable 2FA
+                                    2FA'yı etkinleştir
                                 </Button>
                             {/snippet}
                         </Form>
@@ -153,9 +153,8 @@
         {:else}
             <div class="flex flex-col items-start justify-start space-y-4">
                 <p class="text-muted-foreground text-sm">
-                    You will be prompted for a secure, random pin during login,
-                    which you can retrieve from the TOTP-supported application
-                    on your phone.
+                    Giriş sırasında senden güvenli ve rastgele bir PIN istenir;
+                    bunu telefonundaki TOTP destekli uygulamadan alabilirsin.
                 </p>
 
                 <div class="relative inline">
@@ -166,7 +165,7 @@
                                 type="submit"
                                 disabled={processing}
                             >
-                                Disable 2FA
+                                2FA'yı devre dışı bırak
                             </Button>
                         {/snippet}
                     </Form>

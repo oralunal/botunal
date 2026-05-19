@@ -54,7 +54,7 @@ test('a success toast is flashed after a profile update', function () {
         ->assertRedirect(route('account.edit'))
         ->assertInertiaFlash('toast', [
             'type' => 'success',
-            'message' => 'Profile updated.',
+            'message' => 'Profil güncellendi.',
         ]);
 });
 

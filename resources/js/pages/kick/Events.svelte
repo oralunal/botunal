@@ -46,7 +46,7 @@
     }
 </script>
 
-<AppHead title="Kick events" />
+<AppHead title="Kick etkinlikleri" />
 
 <div class="flex flex-wrap gap-1">
     {#each types as t (t)}
@@ -92,7 +92,7 @@
                         colspan={Math.max(columns.length, 1)}
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No events.
+                        Etkinlik yok.
                     </td>
                 </tr>
             {/each}

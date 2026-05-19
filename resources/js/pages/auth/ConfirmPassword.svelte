@@ -1,8 +1,8 @@
 <script module lang="ts">
     export const layout = {
-        title: 'Confirm your password',
+        title: 'Parolanı onayla',
         description:
-            'This is a secure area of the application. Please confirm your password before continuing.',
+            'Burası uygulamanın güvenli bir alanı. Devam etmeden önce lütfen parolanı onayla.',
     };
 </script>
 
@@ -17,13 +17,13 @@
     import { store } from '@/routes/password/confirm';
 </script>
 
-<AppHead title="Confirm password" />
+<AppHead title="Parolayı onayla" />
 
 <Form {...store.form()} resetOnSuccess>
     {#snippet children({ errors, processing })}
         <div class="space-y-6">
             <div class="grid gap-2">
-                <Label for="password">Password</Label>
+                <Label for="password">Parola</Label>
                 <PasswordInput
                     id="password"
                     name="password"
@@ -42,7 +42,7 @@
                     data-test="confirm-password-button"
                 >
                     {#if processing}<Spinner />{/if}
-                    Confirm password
+                    Parolayı onayla
                 </Button>
             </div>
         </div>

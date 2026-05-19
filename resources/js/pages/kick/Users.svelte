@@ -39,13 +39,13 @@
     }
 </script>
 
-<AppHead title="Kick users" />
+<AppHead title="Kick kullanıcıları" />
 
 <Card>
     <CardContent class="pt-6">
         <form class="grid gap-3 sm:grid-cols-4" onsubmit={applyFilters}>
             <div class="grid gap-1 sm:col-span-3">
-                <Label for="username">Username (current or former)</Label>
+                <Label for="username">Kullanıcı adı (mevcut veya eski)</Label>
                 <Input
                     id="username"
                     value={username}
@@ -53,7 +53,7 @@
                 />
             </div>
             <div class="flex items-end">
-                <Button type="submit">Filter</Button>
+                <Button type="submit">Filtrele</Button>
             </div>
         </form>
     </CardContent>
@@ -63,10 +63,10 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">User</th>
-                <th class="px-3 py-2">Kick ID</th>
-                <th class="px-3 py-2">First seen</th>
-                <th class="px-3 py-2">Last active</th>
+                <th class="px-3 py-2">Kullanıcı</th>
+                <th class="px-3 py-2">Kick kimliği</th>
+                <th class="px-3 py-2">İlk görülme</th>
+                <th class="px-3 py-2">Son aktiflik</th>
             </tr>
         </thead>
         <tbody>
@@ -96,7 +96,7 @@
                         colspan="4"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No users.
+                        Kullanıcı yok.
                     </td>
                 </tr>
             {/each}

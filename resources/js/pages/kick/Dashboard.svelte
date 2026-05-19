@@ -33,25 +33,25 @@
     usePoll(['counts', 'feed'], 10000);
 
     const tiles = $derived([
-        { label: 'Messages', value: counts.messages },
-        { label: 'Follows', value: counts.follows },
-        { label: 'Subscriptions', value: counts.subscriptions },
+        { label: 'Mesajlar', value: counts.messages },
+        { label: 'Takipler', value: counts.follows },
+        { label: 'Abonelikler', value: counts.subscriptions },
         { label: 'Kicks', value: counts.kicks },
-        { label: 'Bans', value: counts.bans },
+        { label: 'Yasaklar', value: counts.bans },
     ]);
 </script>
 
-<AppHead title="Kick dashboard" />
+<AppHead title="Kick paneli" />
 
 <div class="flex items-center gap-3">
-    <h2 class="text-lg font-semibold">Today</h2>
+    <h2 class="text-lg font-semibold">Bugün</h2>
     {#if is_live}
-        <Badge>Live</Badge>
+        <Badge>Yayında</Badge>
     {:else}
-        <Badge variant="secondary">Offline</Badge>
+        <Badge variant="secondary">Yayın dışı</Badge>
     {/if}
     {#if !connections.channel || !connections.bot}
-        <Badge variant="destructive">Connection incomplete</Badge>
+        <Badge variant="destructive">Bağlantı tamamlanmadı</Badge>
     {/if}
 </div>
 
@@ -72,7 +72,7 @@
 
 <Card>
     <CardHeader>
-        <CardTitle>Recent activity</CardTitle>
+        <CardTitle>Son etkinlik</CardTitle>
     </CardHeader>
     <CardContent>
         <Deferred data="feed">
@@ -97,7 +97,7 @@
                     {/each}
                 </ul>
             {:else}
-                <p class="text-sm text-muted-foreground">No activity yet.</p>
+                <p class="text-sm text-muted-foreground">Henüz etkinlik yok.</p>
             {/if}
         </Deferred>
     </CardContent>

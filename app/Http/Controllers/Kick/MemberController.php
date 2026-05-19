@@ -47,7 +47,7 @@ class MemberController extends Controller
 
         $user->syncPermissions($request->validated('abilities', []));
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Permissions updated.')]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Yetkiler güncellendi.')]);
 
         return back();
     }

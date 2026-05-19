@@ -34,7 +34,7 @@ class AccountController extends Controller
 
         $request->user()->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Profile updated.')]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Profil güncellendi.')]);
 
         return to_route('account.edit');
     }

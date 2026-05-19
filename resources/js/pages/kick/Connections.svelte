@@ -25,24 +25,24 @@
     const cards = $derived([
         {
             conn: channel,
-            title: 'Channel (TROLUNAL)',
-            description: 'Receives webhook events and performs moderation.',
+            title: 'Kanal (TROLUNAL)',
+            description: 'Webhook etkinliklerini alır ve moderasyon yapar.',
         },
         {
             conn: bot,
             title: 'Bot (botunal)',
-            description: 'Posts chat messages as the bot account.',
+            description: 'Sohbet mesajlarını bot hesabıyla gönderir.',
         },
     ]);
 
     function remove(type: 'channel' | 'bot') {
-        if (confirm(`Disconnect the ${type} account?`)) {
+        if (confirm(`${type} hesabının bağlantısı kesilsin mi?`)) {
             router.delete(disconnect(type).url);
         }
     }
 </script>
 
-<AppHead title="Kick connections" />
+<AppHead title="Kick bağlantıları" />
 
 <div class="grid gap-6 md:grid-cols-2">
     {#each cards as { conn, title, description } (conn.type)}
@@ -51,11 +51,11 @@
                 <div class="flex items-center justify-between">
                     <CardTitle>{title}</CardTitle>
                     {#if conn.connected && !conn.is_expired}
-                        <Badge>Connected</Badge>
+                        <Badge>Bağlı</Badge>
                     {:else if conn.connected && conn.is_expired}
-                        <Badge variant="destructive">Token expired</Badge>
+                        <Badge variant="destructive">Jeton süresi doldu</Badge>
                     {:else}
-                        <Badge variant="secondary">Not connected</Badge>
+                        <Badge variant="secondary">Bağlı değil</Badge>
                     {/if}
                 </div>
                 <CardDescription>{description}</CardDescription>
@@ -64,13 +64,13 @@
                 {#if conn.connected}
                     <dl class="text-sm">
                         <div class="flex justify-between py-1">
-                            <dt class="text-muted-foreground">Account</dt>
+                            <dt class="text-muted-foreground">Hesap</dt>
                             <dd>{conn.display_name ?? conn.slug ?? '—'}</dd>
                         </div>
                         {#if conn.type === 'channel'}
                             <div class="flex justify-between py-1">
                                 <dt class="text-muted-foreground">
-                                    Broadcaster ID
+                                    Yayıncı kimliği
                                 </dt>
                                 <dd>{conn.broadcaster_user_id ?? '—'}</dd>
                             </div>
@@ -81,7 +81,7 @@
                 {#if conn.missing_scopes.length > 0}
                     <div class="space-y-1">
                         <p class="text-sm font-medium text-destructive">
-                            Missing scopes
+                            Eksik izinler
                         </p>
                         <div class="flex flex-wrap gap-1">
                             {#each conn.missing_scopes as scope (scope)}
@@ -91,7 +91,7 @@
                     </div>
                 {:else if conn.connected}
                     <p class="text-sm text-muted-foreground">
-                        All required scopes granted.
+                        Gerekli tüm izinler verildi.
                     </p>
                 {/if}
 
@@ -102,7 +102,7 @@
                                 href={redirect(conn.type).url}
                                 class={props.class}
                             >
-                                {conn.connected ? 'Reconnect' : 'Connect'}
+                                {conn.connected ? 'Yeniden bağlan' : 'Bağlan'}
                             </a>
                         {/snippet}
                     </Button>
@@ -111,7 +111,7 @@
                             variant="outline"
                             onclick={() => remove(conn.type)}
                         >
-                            Disconnect
+                            Bağlantıyı kes
                         </Button>
                     {/if}
                 </div>

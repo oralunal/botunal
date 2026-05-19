@@ -40,19 +40,19 @@
     );
 </script>
 
-<AppHead title="Kick subscriptions" />
+<AppHead title="Kick abonelikleri" />
 
 <Card>
     <CardHeader>
-        <CardTitle>Webhook subscriptions</CardTitle>
+        <CardTitle>Webhook abonelikleri</CardTitle>
         <CardDescription>
-            Subscribe the app to every Kick event it can process.
+            Uygulamayı işleyebileceği tüm Kick etkinliklerine abone et.
         </CardDescription>
     </CardHeader>
     <CardContent class="space-y-4">
         {#if !channel_connected}
             <Badge variant="destructive">
-                Connect the channel account first
+                Önce kanal hesabını bağla
             </Badge>
         {/if}
 
@@ -61,14 +61,14 @@
                 disabled={!channel_connected}
                 onclick={() => router.post(store().url)}
             >
-                Subscribe to all events
+                Tüm etkinliklere abone ol
             </Button>
             <Button
                 variant="outline"
                 disabled={!channel_connected}
                 onclick={() => router.post(sync().url)}
             >
-                Sync with Kick
+                Kick ile eşitle
             </Button>
         </div>
 
@@ -81,9 +81,9 @@
                     <span class="font-mono">{name}</span>
                     <div class="flex items-center gap-2">
                         {#if activeNames.has(name)}
-                            <Badge>active</Badge>
+                            <Badge>etkin</Badge>
                         {:else}
-                            <Badge variant="secondary">missing</Badge>
+                            <Badge variant="secondary">eksik</Badge>
                         {/if}
                         {#if sub}
                             <Button
@@ -92,7 +92,7 @@
                                 onclick={() =>
                                     router.delete(destroy(sub.id).url)}
                             >
-                                Remove
+                                Kaldır
                             </Button>
                         {/if}
                     </div>

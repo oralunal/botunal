@@ -54,24 +54,24 @@
     }
 
     function remove(timer: Timer) {
-        if (confirm(`Delete timer "${timer.name}"?`)) {
+        if (confirm(`"${timer.name}" zamanlayıcısı silinsin mi?`)) {
             router.delete(destroy(timer.id).url);
         }
     }
 </script>
 
-<AppHead title="Kick timers" />
+<AppHead title="Kick zamanlayıcıları" />
 
 <div class="flex items-center justify-between">
-    <h2 class="text-lg font-semibold">Timers</h2>
-    <Button onclick={newTimer}>New timer</Button>
+    <h2 class="text-lg font-semibold">Zamanlayıcılar</h2>
+    <Button onclick={newTimer}>Yeni zamanlayıcı</Button>
 </div>
 
 {#if editing}
     <Card>
         <CardContent class="space-y-4 pt-6">
             <div class="grid gap-1">
-                <Label for="name">Name</Label>
+                <Label for="name">Ad</Label>
                 <Input
                     id="name"
                     value={form.name}
@@ -79,7 +79,7 @@
                 />
             </div>
             <div class="grid gap-1">
-                <Label for="message">Message</Label>
+                <Label for="message">Mesaj</Label>
                 <textarea
                     id="message"
                     rows="2"
@@ -87,14 +87,14 @@
                     bind:value={form.message}
                 ></textarea>
                 <p class="text-xs text-muted-foreground">
-                    Placeholders: {'{channel}'}
+                    Yer tutucular: {'{channel}'}
                     {'{uptime}'}
                     {'{random.1-100}'}
                 </p>
             </div>
             <div class="grid gap-3 sm:grid-cols-2">
                 <div class="grid gap-1">
-                    <Label for="interval">Interval (s)</Label>
+                    <Label for="interval">Aralık (sn)</Label>
                     <Input
                         id="interval"
                         type="number"
@@ -106,7 +106,7 @@
                     />
                 </div>
                 <div class="grid gap-1">
-                    <Label for="minmsg">Min messages between</Label>
+                    <Label for="minmsg">Aralıktaki min mesaj</Label>
                     <Input
                         id="minmsg"
                         type="number"
@@ -121,17 +121,17 @@
             <div class="flex gap-4 text-sm">
                 <label class="flex items-center gap-2">
                     <input type="checkbox" bind:checked={form.only_when_live} />
-                    Only when live
+                    Yalnız yayındayken
                 </label>
                 <label class="flex items-center gap-2">
                     <input type="checkbox" bind:checked={form.is_enabled} />
-                    Enabled
+                    Etkin
                 </label>
             </div>
             <div class="flex gap-2">
-                <Button onclick={save}>Save</Button>
+                <Button onclick={save}>Kaydet</Button>
                 <Button variant="outline" onclick={() => (editing = false)}>
-                    Cancel
+                    İptal
                 </Button>
             </div>
         </CardContent>
@@ -142,10 +142,10 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">Name</th>
-                <th class="px-3 py-2">Interval</th>
-                <th class="px-3 py-2">Message</th>
-                <th class="px-3 py-2">Status</th>
+                <th class="px-3 py-2">Ad</th>
+                <th class="px-3 py-2">Aralık</th>
+                <th class="px-3 py-2">Mesaj</th>
+                <th class="px-3 py-2">Durum</th>
                 <th class="px-3 py-2"></th>
             </tr>
         </thead>
@@ -157,9 +157,9 @@
                     <td class="px-3 py-2 truncate">{timer.message}</td>
                     <td class="px-3 py-2">
                         {#if timer.is_enabled}
-                            <Badge>enabled</Badge>
+                            <Badge>etkin</Badge>
                         {:else}
-                            <Badge variant="secondary">disabled</Badge>
+                            <Badge variant="secondary">devre dışı</Badge>
                         {/if}
                     </td>
                     <td class="px-3 py-2 text-right">
@@ -168,14 +168,14 @@
                             size="sm"
                             onclick={() => edit(timer)}
                         >
-                            Edit
+                            Düzenle
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
                             onclick={() => remove(timer)}
                         >
-                            Delete
+                            Sil
                         </Button>
                     </td>
                 </tr>
@@ -185,7 +185,7 @@
                         colspan="5"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No timers yet.
+                        Henüz zamanlayıcı yok.
                     </td>
                 </tr>
             {/each}

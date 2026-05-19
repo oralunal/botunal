@@ -20,8 +20,8 @@ test('a 400 on the bans endpoint maps to a privileged-account message', function
     $e = new KickApiException('post', '/moderation/bans', 400, '{"message":"Invalid request"}');
 
     expect($e->userMessage())
-        ->toContain('moderator')
-        ->toContain('broadcaster');
+        ->toContain('moderatör')
+        ->toContain('Yayıncı');
 });
 
 test('other Kick failures keep an informative generic message', function () {
@@ -49,7 +49,7 @@ test('banning a privileged account surfaces the friendly error, not raw JSON', f
 
     $toast = session('inertia.flash_data')['toast'] ?? null;
     expect($toast['type'])->toBe('error')
-        ->and($toast['message'])->toContain('moderator')
+        ->and($toast['message'])->toContain('moderatör')
         ->and($toast['message'])->not->toContain('[400]');
 });
 
@@ -68,5 +68,5 @@ test('unban from the user page surfaces the friendly error on a 400', function (
     expect(KickBan::count())->toBe(0);
 
     $toast = session('inertia.flash_data')['toast'] ?? null;
-    expect($toast['message'])->toContain('moderator');
+    expect($toast['message'])->toContain('moderatör');
 });

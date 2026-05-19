@@ -4,7 +4,7 @@
     export const layout = {
         breadcrumbs: [
             {
-                title: 'Profile settings',
+                title: 'Profil ayarları',
                 href: edit(),
             },
         ],
@@ -35,15 +35,15 @@
     const user = $derived(page.props.auth.user);
 </script>
 
-<AppHead title="Profile settings" />
+<AppHead title="Profil ayarları" />
 
-<h1 class="sr-only">Profile settings</h1>
+<h1 class="sr-only">Profil ayarları</h1>
 
 <div class="flex flex-col space-y-6">
     <Heading
         variant="small"
-        title="Profile information"
-        description="Update your name and email address"
+        title="Profil bilgileri"
+        description="Ad ve e-posta adresini güncelle"
     />
 
     <Form
@@ -53,7 +53,7 @@
     >
         {#snippet children({ errors, processing })}
             <div class="grid gap-2">
-                <Label for="name">Name</Label>
+                <Label for="name">Ad</Label>
                 <Input
                     id="name"
                     name="name"
@@ -61,13 +61,13 @@
                     value={user.name}
                     required
                     autocomplete="name"
-                    placeholder="Full name"
+                    placeholder="Ad soyad"
                 />
                 <InputError class="mt-2" message={errors.name} />
             </div>
 
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">E-posta adresi</Label>
                 <Input
                     id="email"
                     type="email"
@@ -76,7 +76,7 @@
                     value={user.email}
                     required
                     autocomplete="username"
-                    placeholder="Email address"
+                    placeholder="E-posta adresi"
                 />
                 <InputError class="mt-2" message={errors.email} />
             </div>
@@ -84,16 +84,17 @@
             {#if mustVerifyEmail && !user.email_verified_at}
                 <div>
                     <p class="-mt-4 text-sm text-muted-foreground">
-                        Your email address is unverified.
+                        E-posta adresin doğrulanmamış.
                         <TextLink href={send()} as="button">
-                            Click here to resend the verification email.
+                            Doğrulama e-postasını yeniden göndermek için buraya
+                            tıkla.
                         </TextLink>
                     </p>
 
                     {#if status === 'verification-link-sent'}
                         <div class="mt-2 text-sm font-medium text-green-600">
-                            A new verification link has been sent to your email
-                            address.
+                            E-posta adresine yeni bir doğrulama bağlantısı
+                            gönderildi.
                         </div>
                     {/if}
                 </div>
@@ -103,7 +104,7 @@
                 <Button
                     type="submit"
                     disabled={processing}
-                    data-test="update-profile-button">Save</Button
+                    data-test="update-profile-button">Kaydet</Button
                 >
             </div>
         {/snippet}

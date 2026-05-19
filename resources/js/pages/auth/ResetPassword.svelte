@@ -1,7 +1,7 @@
 <script module lang="ts">
     export const layout = {
-        title: 'Reset password',
-        description: 'Please enter your new password below',
+        title: 'Parolayı sıfırla',
+        description: 'Lütfen yeni parolanı aşağıya gir',
     };
 </script>
 
@@ -27,7 +27,7 @@
     } = $props();
 </script>
 
-<AppHead title="Reset password" />
+<AppHead title="Parolayı sıfırla" />
 
 <Form
     {...update.form()}
@@ -37,7 +37,7 @@
     {#snippet children({ errors, processing })}
         <div class="grid gap-6">
             <div class="grid gap-2">
-                <Label for="email">Email</Label>
+                <Label for="email">E-posta</Label>
                 <Input
                     id="email"
                     type="email"
@@ -51,26 +51,26 @@
             </div>
 
             <div class="grid gap-2">
-                <Label for="password">Password</Label>
+                <Label for="password">Parola</Label>
                 <PasswordInput
                     id="password"
                     name="password"
                     autocomplete="new-password"
                     class="mt-1 block w-full"
-                    placeholder="Password"
+                    placeholder="Parola"
                     passwordrules={passwordRules}
                 />
                 <InputError message={errors.password} />
             </div>
 
             <div class="grid gap-2">
-                <Label for="password_confirmation">Confirm password</Label>
+                <Label for="password_confirmation">Parolayı onayla</Label>
                 <PasswordInput
                     id="password_confirmation"
                     name="password_confirmation"
                     autocomplete="new-password"
                     class="mt-1 block w-full"
-                    placeholder="Confirm password"
+                    placeholder="Parolayı onayla"
                     passwordrules={passwordRules}
                 />
                 <InputError message={errors.password_confirmation} />
@@ -83,7 +83,7 @@
                 data-test="reset-password-button"
             >
                 {#if processing}<Spinner />{/if}
-                Reset password
+                Parolayı sıfırla
             </Button>
         </div>
     {/snippet}

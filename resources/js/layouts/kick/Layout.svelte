@@ -30,36 +30,36 @@
     } = $props();
 
     const sidebarNavItems: NavItem[] = [
-        { title: 'Dashboard', href: dashboard(), ability: 'dashboard.view' },
+        { title: 'Panel', href: dashboard(), ability: 'dashboard.view' },
         {
-            title: 'Connections',
+            title: 'Bağlantılar',
             href: connections(),
             ability: 'connections.manage',
         },
         {
-            title: 'Subscriptions',
+            title: 'Abonelikler',
             href: subscriptions(),
             ability: 'subscriptions.manage',
         },
-        { title: 'Messages', href: messages(), ability: 'messages.view' },
-        { title: 'Events', href: events(), ability: 'events.view' },
+        { title: 'Mesajlar', href: messages(), ability: 'messages.view' },
+        { title: 'Etkinlikler', href: events(), ability: 'events.view' },
         {
-            title: 'Commands',
+            title: 'Komutlar',
             href: commandsIndex(),
             ability: 'commands.manage',
         },
-        { title: 'Timers', href: timersIndex(), ability: 'timers.manage' },
+        { title: 'Zamanlayıcılar', href: timersIndex(), ability: 'timers.manage' },
         {
-            title: 'Command logs',
+            title: 'Komut kayıtları',
             href: commandLogsIndex(),
             ability: 'command-logs.view',
         },
         {
-            title: 'Moderation',
+            title: 'Moderasyon',
             href: moderationIndex(),
             ability: 'moderation.view',
         },
-        { title: 'Users', href: usersIndex(), ability: 'kick-users.view' },
+        { title: 'Kick kullanıcıları', href: usersIndex(), ability: 'kick-users.view' },
         { title: 'Wiki', href: wikiIndex(), ability: 'wiki.view' },
         {
             title: 'Üye Mesajları',
@@ -88,7 +88,7 @@
 <div class="px-4 py-6">
     <Heading
         title="Kick"
-        description="Manage the bot, connections, events and chat logs"
+        description="Botu, bağlantıları, etkinlikleri ve sohbet kayıtlarını yönet"
     />
 
     <div class="flex flex-col lg:flex-row lg:space-x-12">

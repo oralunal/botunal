@@ -54,7 +54,7 @@ test('a message can be marked as read', function () {
         ->assertRedirect(route('kick.member-messages.index'))
         ->assertInertiaFlash('toast', [
             'type' => 'success',
-            'message' => 'Marked as read.',
+            'message' => 'Okundu olarak işaretlendi.',
         ]);
 
     $message->refresh();
@@ -71,7 +71,7 @@ test('a message can be marked as unread', function () {
         ->assertRedirect(route('kick.member-messages.index'))
         ->assertInertiaFlash('toast', [
             'type' => 'success',
-            'message' => 'Marked as unread.',
+            'message' => 'Okunmadı olarak işaretlendi.',
         ]);
 
     $message->refresh();

@@ -33,7 +33,7 @@ class MemberMessageController extends Controller
             'is_read' => false,
         ]);
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Message sent.')]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Mesaj gönderildi.')]);
 
         return to_route('account.messages.index');
     }

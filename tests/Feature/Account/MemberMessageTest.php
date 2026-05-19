@@ -58,7 +58,7 @@ test('a success toast is flashed after sending a message', function () {
         ->assertRedirect(route('account.messages.index'))
         ->assertInertiaFlash('toast', [
             'type' => 'success',
-            'message' => 'Message sent.',
+            'message' => 'Mesaj gönderildi.',
         ]);
 });
 

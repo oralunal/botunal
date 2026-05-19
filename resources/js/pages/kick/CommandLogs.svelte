@@ -28,19 +28,19 @@
               : 'secondary';
 </script>
 
-<AppHead title="Command activity" />
+<AppHead title="Komut etkinliği" />
 
-<h2 class="text-lg font-semibold">Command activity</h2>
+<h2 class="text-lg font-semibold">Komut etkinliği</h2>
 
 <div class="mt-4 overflow-x-auto rounded-md border">
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">Time</th>
-                <th class="px-3 py-2">User</th>
-                <th class="px-3 py-2">Message</th>
-                <th class="px-3 py-2">Response</th>
-                <th class="px-3 py-2">Outcome</th>
+                <th class="px-3 py-2">Zaman</th>
+                <th class="px-3 py-2">Kullanıcı</th>
+                <th class="px-3 py-2">Mesaj</th>
+                <th class="px-3 py-2">Yanıt</th>
+                <th class="px-3 py-2">Sonuç</th>
             </tr>
         </thead>
         <tbody>
@@ -73,7 +73,7 @@
                         colspan="5"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No command activity yet.
+                        Henüz komut etkinliği yok.
                     </td>
                 </tr>
             {/each}

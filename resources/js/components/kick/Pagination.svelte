@@ -19,7 +19,7 @@
 </script>
 
 {#if links.length > 3}
-    <nav class="mt-4 flex flex-wrap gap-1" aria-label="Pagination">
+    <nav class="mt-4 flex flex-wrap gap-1" aria-label="Sayfalama">
         {#each links as link (link.label)}
             {#if link.url}
                 {@const href = link.url}

@@ -59,7 +59,7 @@ class KickAuthController extends Controller
     public function callback(Request $request): RedirectResponse
     {
         if ($request->filled('error')) {
-            return $this->fail($request->string('error_description', 'Kick authorization was denied.'));
+            return $this->fail($request->string('error_description', 'Kick yetkilendirmesi reddedildi.'));
         }
 
         $state = $request->string('state')->toString();
@@ -68,7 +68,7 @@ class KickAuthController extends Controller
         if ($cached === null
             || ($cached['purpose'] ?? null) !== 'member-login'
             || ! $request->filled('code')) {
-            return $this->fail('Invalid or expired authorization request. Please try again.');
+            return $this->fail('Geçersiz veya süresi dolmuş yetkilendirme isteği. Lütfen tekrar deneyin.');
         }
 
         try {
@@ -77,13 +77,13 @@ class KickAuthController extends Controller
         } catch (Throwable $e) {
             report($e);
 
-            return $this->fail('Could not complete the Kick login. Please try again.');
+            return $this->fail('Kick ile giriş tamamlanamadı. Lütfen tekrar deneyin.');
         }
 
         unset($tokens);
 
         if (empty($id['user_id'])) {
-            return $this->fail('Could not read your Kick account.');
+            return $this->fail('Kick hesabınız okunamadı.');
         }
 
         $user = User::firstOrNew(['kick_user_id' => $id['user_id']]);

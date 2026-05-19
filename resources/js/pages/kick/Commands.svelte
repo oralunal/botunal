@@ -83,17 +83,17 @@
     }
 
     function remove(command: Command) {
-        if (confirm(`Delete !${command.name}?`)) {
+        if (confirm(`!${command.name} silinsin mi?`)) {
             router.delete(destroy(command.id).url);
         }
     }
 </script>
 
-<AppHead title="Kick commands" />
+<AppHead title="Kick komutları" />
 
 <div class="flex items-center justify-between">
-    <h2 class="text-lg font-semibold">Commands</h2>
-    <Button onclick={newCommand}>New command</Button>
+    <h2 class="text-lg font-semibold">Komutlar</h2>
+    <Button onclick={newCommand}>Yeni komut</Button>
 </div>
 
 {#if editing}
@@ -101,7 +101,7 @@
         <CardContent class="space-y-4 pt-6">
             <div class="grid gap-3 sm:grid-cols-2">
                 <div class="grid gap-1">
-                    <Label for="name">Name (without prefix)</Label>
+                    <Label for="name">Ad (önek olmadan)</Label>
                     <Input
                         id="name"
                         value={form.name}
@@ -109,21 +109,21 @@
                     />
                 </div>
                 <div class="grid gap-1">
-                    <Label for="type">Type</Label>
+                    <Label for="type">Tür</Label>
                     <select
                         id="type"
                         class="h-9 rounded-md border bg-background px-3 text-sm"
                         bind:value={form.type}
                     >
-                        <option value="static">static</option>
-                        <option value="dynamic">dynamic</option>
+                        <option value="static">statik</option>
+                        <option value="dynamic">dinamik</option>
                     </select>
                 </div>
             </div>
 
             {#if form.type === 'static'}
                 <div class="grid gap-1">
-                    <Label for="response">Response</Label>
+                    <Label for="response">Yanıt</Label>
                     <textarea
                         id="response"
                         rows="3"
@@ -131,7 +131,7 @@
                         bind:value={form.response}
                     ></textarea>
                     <p class="text-xs text-muted-foreground">
-                        Placeholders: {'{user}'}
+                        Yer tutucular: {'{user}'}
                         {'{channel}'}
                         {'{args}'}
                         {'{1}'}
@@ -142,13 +142,13 @@
                 </div>
             {:else}
                 <div class="grid gap-1">
-                    <Label for="handler">Built-in handler</Label>
+                    <Label for="handler">Yerleşik işleyici</Label>
                     <select
                         id="handler"
                         class="h-9 rounded-md border bg-background px-3 text-sm"
                         bind:value={form.handler}
                     >
-                        <option value="" disabled>Select…</option>
+                        <option value="" disabled>Seç…</option>
                         {#each handlers as handler (handler)}
                             <option value={handler}>{handler}</option>
                         {/each}
@@ -158,20 +158,20 @@
 
             <div class="grid gap-3 sm:grid-cols-3">
                 <div class="grid gap-1">
-                    <Label for="permission">Permission</Label>
+                    <Label for="permission">Yetki</Label>
                     <select
                         id="permission"
                         class="h-9 rounded-md border bg-background px-3 text-sm"
                         bind:value={form.permission}
                     >
-                        <option value="everyone">everyone</option>
-                        <option value="subscriber">subscriber</option>
-                        <option value="moderator">moderator</option>
-                        <option value="broadcaster">broadcaster</option>
+                        <option value="everyone">herkes</option>
+                        <option value="subscriber">abone</option>
+                        <option value="moderator">moderatör</option>
+                        <option value="broadcaster">yayıncı</option>
                     </select>
                 </div>
                 <div class="grid gap-1">
-                    <Label for="cooldown">Cooldown (s)</Label>
+                    <Label for="cooldown">Bekleme (sn)</Label>
                     <Input
                         id="cooldown"
                         type="number"
@@ -183,7 +183,7 @@
                     />
                 </div>
                 <div class="grid gap-1">
-                    <Label for="ucooldown">Per-user cooldown (s)</Label>
+                    <Label for="ucooldown">Kullanıcı başına bekleme (sn)</Label>
                     <Input
                         id="ucooldown"
                         type="number"
@@ -197,7 +197,7 @@
             </div>
 
             <div class="grid gap-1">
-                <Label for="aliases">Aliases (comma separated)</Label>
+                <Label for="aliases">Takma adlar (virgülle ayrılmış)</Label>
                 <Input
                     id="aliases"
                     value={form.aliases}
@@ -208,21 +208,21 @@
             <div class="flex gap-4 text-sm">
                 <label class="flex items-center gap-2">
                     <input type="checkbox" bind:checked={form.is_enabled} />
-                    Enabled
+                    Etkin
                 </label>
                 <label class="flex items-center gap-2">
                     <input
                         type="checkbox"
                         bind:checked={form.reply_in_thread}
                     />
-                    Reply in thread
+                    Konu içinde yanıtla
                 </label>
             </div>
 
             <div class="flex gap-2">
-                <Button onclick={save}>Save</Button>
+                <Button onclick={save}>Kaydet</Button>
                 <Button variant="outline" onclick={() => (editing = false)}>
-                    Cancel
+                    İptal
                 </Button>
             </div>
         </CardContent>
@@ -233,11 +233,11 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">Name</th>
-                <th class="px-3 py-2">Type</th>
-                <th class="px-3 py-2">Permission</th>
-                <th class="px-3 py-2">Cooldown</th>
-                <th class="px-3 py-2">Status</th>
+                <th class="px-3 py-2">Ad</th>
+                <th class="px-3 py-2">Tür</th>
+                <th class="px-3 py-2">Yetki</th>
+                <th class="px-3 py-2">Bekleme</th>
+                <th class="px-3 py-2">Durum</th>
                 <th class="px-3 py-2"></th>
             </tr>
         </thead>
@@ -257,9 +257,9 @@
                     <td class="px-3 py-2">{command.cooldown_seconds}s</td>
                     <td class="px-3 py-2">
                         {#if command.is_enabled}
-                            <Badge>enabled</Badge>
+                            <Badge>etkin</Badge>
                         {:else}
-                            <Badge variant="secondary">disabled</Badge>
+                            <Badge variant="secondary">devre dışı</Badge>
                         {/if}
                     </td>
                     <td class="px-3 py-2 text-right">
@@ -268,14 +268,14 @@
                             size="sm"
                             onclick={() => edit(command)}
                         >
-                            Edit
+                            Düzenle
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
                             onclick={() => remove(command)}
                         >
-                            Delete
+                            Sil
                         </Button>
                     </td>
                 </tr>
@@ -285,7 +285,7 @@
                         colspan="6"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No commands yet.
+                        Henüz komut yok.
                     </td>
                 </tr>
             {/each}

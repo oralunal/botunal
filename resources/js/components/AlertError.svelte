@@ -4,7 +4,7 @@
 
     let {
         errors = [],
-        title = 'Something went wrong.',
+        title = 'Bir şeyler ters gitti.',
     }: {
         errors: string[];
         title?: string;

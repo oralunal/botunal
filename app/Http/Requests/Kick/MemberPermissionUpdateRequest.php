@@ -24,4 +24,29 @@ class MemberPermissionUpdateRequest extends FormRequest
             'abilities.*' => ['string', Rule::in(Permissions::all())],
         ];
     }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'array' => ':attribute bir liste olmalıdır.',
+            'abilities.*.in' => 'Geçersiz bir yetki seçildi.',
+        ];
+    }
+
+    /**
+     * Get custom attributes for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'abilities' => 'yetkiler',
+        ];
+    }
 }

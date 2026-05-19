@@ -49,7 +49,7 @@ class MemberMessageController extends Controller
         $memberMessage->read_at = now();
         $memberMessage->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Marked as read.')]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Okundu olarak işaretlendi.')]);
 
         return back();
     }
@@ -60,7 +60,7 @@ class MemberMessageController extends Controller
         $memberMessage->read_at = null;
         $memberMessage->save();
 
-        Inertia::flash('toast', ['type' => 'success', 'message' => __('Marked as unread.')]);
+        Inertia::flash('toast', ['type' => 'success', 'message' => __('Okunmadı olarak işaretlendi.')]);
 
         return back();
     }

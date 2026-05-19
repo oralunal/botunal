@@ -61,7 +61,7 @@ test('a user with users.manage can sync a member\'s permissions', function () {
         ->assertRedirect(route('kick.members.index'))
         ->assertInertiaFlash('toast', [
             'type' => 'success',
-            'message' => 'Permissions updated.',
+            'message' => 'Yetkiler güncellendi.',
         ]);
 
     $fresh = $member->fresh();

@@ -43,20 +43,20 @@
     }
 
     function doUnban() {
-        if (target && confirm(`Unban ${target}?`)) {
+        if (target && confirm(`${target} kullanıcısının yasağı kaldırılsın mı?`)) {
             router.delete(unban().url, { data: { target } });
         }
     }
 </script>
 
-<AppHead title="Kick moderation" />
+<AppHead title="Kick moderasyonu" />
 
 <Card>
     <CardContent class="space-y-4 pt-6">
-        <h2 class="text-lg font-semibold">Moderation action</h2>
+        <h2 class="text-lg font-semibold">Moderasyon işlemi</h2>
         <div class="grid gap-3 sm:grid-cols-3">
             <div class="grid gap-1">
-                <Label for="target">Username or user id</Label>
+                <Label for="target">Kullanıcı adı veya kullanıcı kimliği</Label>
                 <Input
                     id="target"
                     value={target}
@@ -64,7 +64,7 @@
                 />
             </div>
             <div class="grid gap-1">
-                <Label for="duration">Timeout minutes (blank = ban)</Label>
+                <Label for="duration">Zaman aşımı dakikası (boş = yasak)</Label>
                 <Input
                     id="duration"
                     type="number"
@@ -73,7 +73,7 @@
                 />
             </div>
             <div class="grid gap-1">
-                <Label for="reason">Reason</Label>
+                <Label for="reason">Sebep</Label>
                 <Input
                     id="reason"
                     value={reason}
@@ -82,12 +82,12 @@
             </div>
         </div>
         <div class="flex gap-2">
-            <Button onclick={doBan}>Ban / Timeout</Button>
-            <Button variant="outline" onclick={doUnban}>Unban</Button>
+            <Button onclick={doBan}>Yasakla / Zaman aşımı</Button>
+            <Button variant="outline" onclick={doUnban}>Yasağı kaldır</Button>
         </div>
         <p class="text-xs text-muted-foreground">
-            Usernames are resolved from chat history. If the user has never
-            chatted, enter their numeric Kick user id.
+            Kullanıcı adları sohbet geçmişinden çözümlenir. Kullanıcı hiç
+            sohbet etmediyse sayısal Kick kullanıcı kimliğini gir.
         </p>
     </CardContent>
 </Card>
@@ -96,12 +96,12 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">Time</th>
-                <th class="px-3 py-2">User</th>
-                <th class="px-3 py-2">Action</th>
-                <th class="px-3 py-2">By</th>
-                <th class="px-3 py-2">Source</th>
-                <th class="px-3 py-2">Reason</th>
+                <th class="px-3 py-2">Zaman</th>
+                <th class="px-3 py-2">Kullanıcı</th>
+                <th class="px-3 py-2">İşlem</th>
+                <th class="px-3 py-2">Yapan</th>
+                <th class="px-3 py-2">Kaynak</th>
+                <th class="px-3 py-2">Sebep</th>
             </tr>
         </thead>
         <tbody>
@@ -141,7 +141,7 @@
                         colspan="6"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No moderation activity yet.
+                        Henüz moderasyon etkinliği yok.
                     </td>
                 </tr>
             {/each}

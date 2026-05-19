@@ -39,8 +39,8 @@
     function removeRestriction() {
         const label =
             status === 'banned'
-                ? `Remove the ban on ${user.username}?`
-                : `Remove the timeout on ${user.username}?`;
+                ? `${user.username} kullanıcısının yasağı kaldırılsın mı?`
+                : `${user.username} kullanıcısının zaman aşımı kaldırılsın mı?`;
 
         if (confirm(label)) {
             router.delete(unban(user.id).url, { preserveScroll: true });
@@ -71,14 +71,14 @@
     function eventLabel(item: UserEventItem): string {
         switch (item.type) {
             case 'follow':
-                return 'Followed the channel';
+                return 'Kanalı takip etti';
             case 'subscription':
                 return [
-                    `${item.sub_type ?? 'sub'} subscription`,
-                    item.tier ? `tier ${item.tier}` : null,
-                    item.duration ? `${item.duration} mo` : null,
+                    `${item.sub_type ?? 'sub'} abonelik`,
+                    item.tier ? `seviye ${item.tier}` : null,
+                    item.duration ? `${item.duration} ay` : null,
                     item.gifter_username
-                        ? `gifted by ${item.gifter_username}`
+                        ? `${item.gifter_username} hediye etti`
                         : null,
                 ]
                     .filter(Boolean)
@@ -96,7 +96,7 @@
                     .join(' ');
             case 'redemption':
                 return [
-                    item.reward_title ?? 'Reward',
+                    item.reward_title ?? 'Ödül',
                     item.reward_cost != null ? `(${item.reward_cost})` : null,
                     item.status ? `· ${item.status}` : null,
                     item.user_input ? `“${item.user_input}”` : null,
@@ -107,9 +107,9 @@
                 return [
                     item.action ?? 'ban',
                     item.reason ? `· ${item.reason}` : null,
-                    item.moderator_username ? `by ${item.moderator_username}` : null,
+                    item.moderator_username ? `${item.moderator_username} tarafından` : null,
                     item.expires_at
-                        ? `until ${formatIstanbul(item.expires_at)}`
+                        ? `${formatIstanbul(item.expires_at)} tarihine kadar`
                         : null,
                     item.source ? `(${item.source})` : null,
                 ]
@@ -123,17 +123,18 @@
     }
 </script>
 
-<AppHead title={`Kick user · ${user.username}`} />
+<AppHead title={`Kick kullanıcısı · ${user.username}`} />
 
 <Card>
     <CardContent class="space-y-4 pt-6">
         <div class="flex flex-wrap items-center gap-3">
             <h2 class="text-lg font-semibold">{user.username}</h2>
             {#if status === 'banned'}
-                <Badge variant="destructive">Banned</Badge>
+                <Badge variant="destructive">Yasaklı</Badge>
             {:else if status === 'timed_out'}
                 <Badge variant="destructive">
-                    Timed out until {formatIstanbul(user.ban_status.expires_at)}
+                    {formatIstanbul(user.ban_status.expires_at)} tarihine kadar
+                    zaman aşımında
                 </Badge>
             {/if}
             {#if status === 'banned' || status === 'timed_out'}
@@ -143,8 +144,8 @@
                     onclick={removeRestriction}
                 >
                     {status === 'banned'
-                        ? 'Remove ban'
-                        : 'Remove timeout'}
+                        ? 'Yasağı kaldır'
+                        : 'Zaman aşımını kaldır'}
                 </Button>
             {/if}
         </div>
@@ -153,19 +154,20 @@
             class="grid gap-x-8 gap-y-1 text-sm sm:grid-cols-2 lg:grid-cols-4"
         >
             <div>
-                <span class="text-muted-foreground">Kick ID</span><br />
+                <span class="text-muted-foreground">Kick kimliği</span><br />
                 {user.kick_user_id ?? '—'}
             </div>
             <div>
-                <span class="text-muted-foreground">First seen</span><br />
+                <span class="text-muted-foreground">İlk görülme</span><br />
                 {formatIstanbul(user.first_seen_at)}
             </div>
             <div>
-                <span class="text-muted-foreground">Last active</span><br />
+                <span class="text-muted-foreground">Son aktiflik</span><br />
                 {formatIstanbul(user.last_seen_at)}
             </div>
             <div>
-                <span class="text-muted-foreground">Former usernames</span><br
+                <span class="text-muted-foreground">Eski kullanıcı adları</span
+                ><br
                 />
                 {#if user.former_usernames.length > 0}
                     <span class="flex flex-wrap gap-1">
@@ -181,23 +183,23 @@
 
         {#if user.kick_user_id === null}
             <p class="text-xs text-muted-foreground">
-                Identity not verified — matched by username only. Events shown
-                here may include other people who used this name, and
-                moderation actions are unavailable.
+                Kimlik doğrulanmadı — yalnızca kullanıcı adına göre eşleştirildi.
+                Burada gösterilen olaylar bu adı kullanan başka kişileri de
+                içerebilir ve moderasyon işlemleri kullanılamaz.
             </p>
         {/if}
     </CardContent>
 </Card>
 
 <div class="mt-6 flex items-center justify-between">
-    <h3 class="text-base font-semibold">Messages</h3>
+    <h3 class="text-base font-semibold">Mesajlar</h3>
     <label class="flex items-center gap-2 text-sm">
         <input
             type="checkbox"
             checked={deletedOnly}
             onchange={toggleDeleted}
         />
-        Deleted only
+        Yalnız silinenler
     </label>
 </div>
 
@@ -205,9 +207,9 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">Time</th>
-                <th class="px-3 py-2">Message</th>
-                <th class="px-3 py-2">Status</th>
+                <th class="px-3 py-2">Zaman</th>
+                <th class="px-3 py-2">Mesaj</th>
+                <th class="px-3 py-2">Durum</th>
             </tr>
         </thead>
         <tbody>
@@ -255,7 +257,7 @@
                                 colspan="3"
                                 class="px-3 py-6 text-center text-muted-foreground"
                             >
-                                No messages.
+                                Mesaj yok.
                             </td>
                         </tr>
                     {/each}
@@ -269,7 +271,7 @@
     <Pagination links={messages.links} />
 {/if}
 
-<h3 class="mt-6 text-base font-semibold">Activity</h3>
+<h3 class="mt-6 text-base font-semibold">Etkinlik</h3>
 
 <Card class="mt-2">
     <CardContent class="pt-6">
@@ -305,12 +307,12 @@
                     </ul>
                     {#if events.truncated}
                         <p class="mt-3 text-xs text-muted-foreground">
-                            Showing the most recent 200 events.
+                            En son 200 olay gösteriliyor.
                         </p>
                     {/if}
                 {:else}
                     <p class="text-sm text-muted-foreground">
-                        No activity recorded.
+                        Kaydedilmiş etkinlik yok.
                     </p>
                 {/if}
             {/if}

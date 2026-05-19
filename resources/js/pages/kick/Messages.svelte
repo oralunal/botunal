@@ -46,7 +46,7 @@
     }
 
     function removeMessage(row: ChatMessageRow) {
-        if (confirm('Delete this message from chat?')) {
+        if (confirm('Bu mesaj sohbetten silinsin mi?')) {
             router.delete(deleteMessage().url, {
                 data: { message_id: row.kick_message_id },
                 preserveScroll: true,
@@ -56,8 +56,8 @@
 
     function banSender(row: ChatMessageRow, minutes: number | null) {
         const label = minutes
-            ? `Timeout ${row.sender_username}?`
-            : `Ban ${row.sender_username}?`;
+            ? `${row.sender_username} için zaman aşımı uygulansın mı?`
+            : `${row.sender_username} yasaklansın mı?`;
 
         if (confirm(label)) {
             router.post(ban().url, {
@@ -69,13 +69,13 @@
     }
 </script>
 
-<AppHead title="Kick messages" />
+<AppHead title="Kick mesajları" />
 
 <Card>
     <CardContent class="pt-6">
         <form class="grid gap-3 sm:grid-cols-4" onsubmit={applyFilters}>
             <div class="grid gap-1">
-                <Label for="username">Username</Label>
+                <Label for="username">Kullanıcı adı</Label>
                 <Input
                     id="username"
                     value={username}
@@ -83,7 +83,7 @@
                 />
             </div>
             <div class="grid gap-1">
-                <Label for="contains">Contains</Label>
+                <Label for="contains">İçerir</Label>
                 <Input
                     id="contains"
                     value={contains}
@@ -91,7 +91,7 @@
                 />
             </div>
             <div class="grid gap-1">
-                <Label for="date">Date</Label>
+                <Label for="date">Tarih</Label>
                 <Input
                     id="date"
                     type="date"
@@ -100,7 +100,7 @@
                 />
             </div>
             <div class="flex items-end">
-                <Button type="submit">Filter</Button>
+                <Button type="submit">Filtrele</Button>
             </div>
         </form>
     </CardContent>
@@ -110,9 +110,9 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
-                <th class="px-3 py-2">Time</th>
-                <th class="px-3 py-2">User</th>
-                <th class="px-3 py-2">Message</th>
+                <th class="px-3 py-2">Zaman</th>
+                <th class="px-3 py-2">Kullanıcı</th>
+                <th class="px-3 py-2">Mesaj</th>
                 <th class="px-3 py-2"></th>
             </tr>
         </thead>
@@ -149,7 +149,7 @@
                                 size="sm"
                                 onclick={() => removeMessage(message)}
                             >
-                                Delete
+                                Sil
                             </Button>
                         {/if}
                         <Button
@@ -157,14 +157,14 @@
                             size="sm"
                             onclick={() => banSender(message, 10)}
                         >
-                            Timeout
+                            Zaman aşımı
                         </Button>
                         <Button
                             variant="ghost"
                             size="sm"
                             onclick={() => banSender(message, null)}
                         >
-                            Ban
+                            Yasakla
                         </Button>
                     </td>
                 </tr>
@@ -174,7 +174,7 @@
                         colspan="4"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
-                        No messages.
+                        Mesaj yok.
                     </td>
                 </tr>
             {/each}
