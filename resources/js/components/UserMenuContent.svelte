@@ -11,7 +11,8 @@
     import UserInfo from '@/components/UserInfo.svelte';
     import { toUrl } from '@/lib/utils';
     import { logout } from '@/routes';
-    import { edit } from '@/routes/profile';
+    import { edit as editAccount } from '@/routes/account';
+    import { edit as editProfile } from '@/routes/profile';
     import type { User } from '@/types';
 
     let {
@@ -19,6 +20,11 @@
     }: {
         user: User;
     } = $props();
+
+    const isKickMember = $derived(user.kick_user_id != null);
+    const settingsHref = $derived(
+        isKickMember ? editAccount() : editProfile(),
+    );
 
     function handleLogout(propsOnClick?: () => void) {
         return () => {
@@ -39,12 +45,12 @@
         {#snippet children(props)}
             <Link
                 class={props.class}
-                href={toUrl(edit())}
+                href={toUrl(settingsHref)}
                 prefetch
                 onclick={props.onClick}
             >
                 <Settings class="mr-2 h-4 w-4" />
-                Ayarlar
+                {isKickMember ? 'Hesabım' : 'Ayarlar'}
             </Link>
         {/snippet}
     </DropdownMenuItem>

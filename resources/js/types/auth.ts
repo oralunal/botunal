@@ -4,6 +4,10 @@ export type User = {
     email: string;
     avatar?: string;
     email_verified_at: string | null;
+    kick_user_id?: number | null;
+    kick_username?: string | null;
+    first_name?: string | null;
+    last_name?: string | null;
     created_at: string;
     updated_at: string;
     [key: string]: unknown;

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { Link } from '@inertiajs/svelte';
+    import { Link, page } from '@inertiajs/svelte';
     import LayoutGrid from 'lucide-svelte/icons/layout-grid';
     import Radio from 'lucide-svelte/icons/radio';
     import type { Snippet } from 'svelte';
@@ -26,18 +26,17 @@
         children?: Snippet;
     } = $props();
 
-    const mainNavItems: NavItem[] = [
-        {
-            title: 'Panel',
-            href: dashboard(),
-            icon: LayoutGrid,
-        },
-        {
-            title: 'Kick',
-            href: kickDashboard(),
-            icon: Radio,
-        },
-    ];
+    const canSeeKick = $derived(
+        page.props.auth?.is_super_admin === true ||
+            (page.props.auth?.permissions ?? []).length > 0,
+    );
+
+    const mainNavItems = $derived<NavItem[]>([
+        { title: 'Panel', href: dashboard(), icon: LayoutGrid },
+        ...(canSeeKick
+            ? [{ title: 'Kick', href: kickDashboard(), icon: Radio }]
+            : []),
+    ]);
 </script>
 
 <Sidebar collapsible="icon" variant="inset">
