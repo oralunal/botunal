@@ -6,9 +6,7 @@
     import { Separator } from '@/components/ui/separator';
     import { currentUrlState } from '@/lib/currentUrl.svelte';
     import { toUrl } from '@/lib/utils';
-    import { edit as editAppearance } from '@/routes/appearance';
-    import { edit as editProfile } from '@/routes/account';
-    import { index as messagesIndex } from '@/routes/account/messages';
+    import { appearance as accountAppearance, edit as editProfile } from '@/routes/account';
     import type { NavItem } from '@/types';
 
     let {
@@ -23,12 +21,8 @@
             href: editProfile(),
         },
         {
-            title: 'Mesajlar',
-            href: messagesIndex(),
-        },
-        {
             title: 'Görünüm',
-            href: editAppearance(),
+            href: accountAppearance(),
         },
     ];
 

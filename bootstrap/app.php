@@ -5,6 +5,7 @@ use App\Http\Middleware\EnsurePermission;
 use App\Http\Middleware\EnsureProfileComplete;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
+use App\Http\Middleware\RedirectKickToAccount;
 use App\Http\Middleware\VerifyKickSignature;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
@@ -32,6 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => EnsurePermission::class,
             'profile.complete' => EnsureProfileComplete::class,
             'password.account' => EnsurePasswordAccount::class,
+            'redirect-kick' => RedirectKickToAccount::class,
         ]);
 
         $middleware->preventRequestForgery(except: [

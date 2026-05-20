@@ -10,4 +10,6 @@ Route::middleware(['auth', 'profile.complete'])->group(function () {
 
     Route::get('/account/messages', [MemberMessageController::class, 'index'])->name('account.messages.index');
     Route::post('/account/messages', [MemberMessageController::class, 'store'])->name('account.messages.store');
+
+    Route::inertia('/account/appearance', 'account/Appearance')->name('account.appearance');
 });
