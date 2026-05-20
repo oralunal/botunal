@@ -23,7 +23,7 @@ test('the member messages page is displayed for authenticated users', function (
         ->get(route('account.messages.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('account/Messages')
+            ->component('Messages')
             ->has('messages.data')
         );
 });
@@ -93,7 +93,7 @@ test('a member only sees their own messages', function () {
         ->get(route('account.messages.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('account/Messages')
+            ->component('Messages')
             ->where('messages.data', fn ($data) => collect($data)->pluck('id')->all() === [$own->id])
         );
 });
@@ -107,7 +107,7 @@ test('the member messages list paginates at 20 per page', function () {
         ->get(route('account.messages.index'))
         ->assertOk()
         ->assertInertia(fn ($page) => $page
-            ->component('account/Messages')
+            ->component('Messages')
             ->has('messages.data', 20)
             ->where('messages.total', 21)
             ->where('messages.per_page', 20)

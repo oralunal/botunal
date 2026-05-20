@@ -17,7 +17,7 @@ class MemberMessageController extends Controller
      */
     public function index(Request $request): Response
     {
-        return Inertia::render('account/Messages', [
+        return Inertia::render('Messages', [
             'messages' => $request->user()->memberMessages()->latest()->paginate(20)->withQueryString(),
         ]);
     }
