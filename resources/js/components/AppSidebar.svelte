@@ -19,7 +19,7 @@
     import { toUrl } from '@/lib/utils';
     import { dashboard } from '@/routes';
     import { index as accountMessages } from '@/routes/account/messages';
-    import { dashboard as kickDashboard } from '@/routes/kick';
+    import { landing as kickLanding } from '@/routes/kick';
     import type { NavItem } from '@/types';
 
     let {
@@ -48,7 +48,7 @@
               ]
             : []),
         ...(canSeeKick
-            ? [{ title: 'Kick', href: kickDashboard(), icon: Radio }]
+            ? [{ title: 'Kick', href: kickLanding(), icon: Radio }]
             : []),
     ]);
 </script>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Kick\CommandLogController;
 use App\Http\Controllers\Kick\KickConnectionController;
 use App\Http\Controllers\Kick\KickDashboardController;
 use App\Http\Controllers\Kick\KickEventController;
+use App\Http\Controllers\Kick\KickLandingController;
 use App\Http\Controllers\Kick\KickOAuthCallbackController;
 use App\Http\Controllers\Kick\KickOAuthController;
 use App\Http\Controllers\Kick\KickSubscriptionController;
@@ -36,6 +37,12 @@ Route::get('/kick/oauth/callback', KickOAuthCallbackController::class)
     ->name('kick.oauth.callback');
 
 Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
+    /*
+     * Smart landing: the main sidebar's "Kick" link points here and we
+     * forward to the first Kick page the user actually has permission for.
+     */
+    Route::get('/kick', KickLandingController::class)->name('kick.landing');
+
     // OAuth (PKCE) connect/disconnect.
     Route::middleware('permission:connections.manage')->group(function () {
         Route::get('/kick/oauth/{type}/redirect', [KickOAuthController::class, 'redirect'])
