@@ -97,6 +97,7 @@
             onSuccess: () => (editing = false),
             preserveScroll: true,
         };
+
         if (form.id) {
             router.put(update(form.id).url, payload(), options);
         } else {

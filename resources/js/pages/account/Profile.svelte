@@ -22,12 +22,6 @@
     import { Label } from '@/components/ui/label';
     import type { MemberProfile } from '@/types';
 
-    let {
-        status = '',
-    }: {
-        status?: string;
-    } = $props();
-
     const user = $derived(page.props.auth.user as unknown as MemberProfile);
 </script>
 

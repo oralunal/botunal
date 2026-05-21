@@ -22,8 +22,8 @@
         CardTitle,
     } from '@/components/ui/card';
     import { formatIstanbul, formatIstanbulDate } from '@/lib/datetime';
-    import { dashboard as kickDashboard } from '@/routes/kick';
     import { toUrl } from '@/lib/utils';
+    import { dashboard as kickDashboard } from '@/routes/kick';
 
     type MessageRow = { content: string; sent_at: string | null };
     type SubscriptionRow = {

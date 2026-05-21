@@ -15,11 +15,11 @@
     } from '@/routes/kick';
     import { index as commandLogsIndex } from '@/routes/kick/command-logs';
     import { index as commandsIndex } from '@/routes/kick/commands';
+    import { index as memberMessagesIndex } from '@/routes/kick/member-messages';
+    import { index as membersIndex } from '@/routes/kick/members';
     import { index as moderationIndex } from '@/routes/kick/moderation';
     import { index as timersIndex } from '@/routes/kick/timers';
     import { index as usersIndex } from '@/routes/kick/users';
-    import { index as memberMessagesIndex } from '@/routes/kick/member-messages';
-    import { index as membersIndex } from '@/routes/kick/members';
     import { index as wikiIndex } from '@/routes/kick/wiki';
     import type { NavItem } from '@/types';
 

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { router } from '@inertiajs/svelte';
+    import { SvelteSet } from 'svelte/reactivity';
     import MemberController from '@/actions/App/Http/Controllers/Kick/MemberController';
     import AppHead from '@/components/AppHead.svelte';
     import Pagination from '@/components/kick/Pagination.svelte';
@@ -25,7 +26,7 @@
     let selected = $state<Record<number, Set<string>>>({});
 
     function stateFor(user: AdminMemberRow): Set<string> {
-        return selected[user.id] ?? new Set(user.permissions);
+        return selected[user.id] ?? new SvelteSet(user.permissions);
     }
 
     function isChecked(user: AdminMemberRow, ability: string): boolean {
@@ -37,12 +38,14 @@
     }
 
     function toggle(user: AdminMemberRow, ability: string, on: boolean) {
-        const set = new Set(stateFor(user));
+        const set = new SvelteSet(stateFor(user));
+
         if (on) {
             set.add(ability);
         } else {
             set.delete(ability);
         }
+
         selected[user.id] = set;
     }
 
