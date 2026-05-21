@@ -20,7 +20,7 @@
 
 {#if links.length > 3}
     <nav class="mt-4 flex flex-wrap gap-1" aria-label="Sayfalama">
-        {#each links as link (link.label)}
+        {#each links as link, index (index)}
             {#if link.url}
                 {@const href = link.url}
                 <Button
