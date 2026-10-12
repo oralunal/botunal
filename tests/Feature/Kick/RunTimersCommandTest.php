@@ -177,3 +177,15 @@ test('messages sent before the previous timer message do not count toward the mi
 
     Queue::assertNothingPushed();
 });
+
+test('the rotation follows the timer order rather than creation order', function () {
+    $this->freezeSecond();
+    Cache::put('kick:livestream:is_live', true);
+    Timer::factory()->create(['message' => 'created first', 'position' => 2, 'interval_seconds' => 30, 'last_run_at' => now()->subHour()]);
+    Timer::factory()->create(['message' => 'created second', 'position' => 1, 'interval_seconds' => 30, 'last_run_at' => now()->subSeconds(30)]);
+    Timer::factory()->create(['message' => 'created third', 'position' => 3, 'interval_seconds' => 30, 'last_run_at' => now()->subHours(2)]);
+
+    $this->artisan('kick:run-timers')->assertSuccessful();
+
+    expect(Queue::pushed(SendChatMessageJob::class)->pluck('content')->all())->toBe(['created first']);
+});

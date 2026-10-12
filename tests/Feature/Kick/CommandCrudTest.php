@@ -85,6 +85,21 @@ test('timers can be created and validated', function () {
         ->assertSessionHasErrors(['name', 'message', 'interval_seconds']);
 });
 
+test('new timers are added to the end of the rotation', function () {
+    Timer::factory()->create(['position' => 5]);
+
+    $this->post(route('kick.timers.store'), [
+        'name' => 'promo',
+        'message' => 'Follow {channel}',
+        'interval_seconds' => 600,
+        'min_messages_between' => 0,
+        'only_when_live' => true,
+        'is_enabled' => true,
+    ])->assertRedirect(route('kick.timers.index'));
+
+    expect(Timer::firstWhere('name', 'promo')->position)->toBe(6);
+});
+
 test('command pages require authentication', function () {
     auth()->logout();
 

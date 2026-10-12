@@ -21,7 +21,10 @@ class TimerController extends Controller
 
     public function store(TimerStoreRequest $request): RedirectResponse
     {
-        Timer::create($request->validated());
+        Timer::create([
+            ...$request->validated(),
+            'position' => Timer::max('position') + 1,
+        ]);
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Timer created.')]);
 

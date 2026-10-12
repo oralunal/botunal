@@ -14,6 +14,7 @@ use App\Http\Controllers\Kick\MemberController;
 use App\Http\Controllers\Kick\MemberMessageController;
 use App\Http\Controllers\Kick\ModerationController;
 use App\Http\Controllers\Kick\TimerController;
+use App\Http\Controllers\Kick\TimerOrderController;
 use App\Http\Controllers\Kick\UserController;
 use App\Http\Controllers\Kick\WebhookController;
 use App\Http\Controllers\Kick\WikiController;
@@ -101,6 +102,8 @@ Route::middleware(['auth', 'verified', 'profile.complete'])->group(function () {
             ->name('kick.timers.update');
         Route::delete('/kick/timers/{timer}', [TimerController::class, 'destroy'])
             ->name('kick.timers.destroy');
+        Route::put('/kick/timer-order', [TimerOrderController::class, 'update'])
+            ->name('kick.timer-order.update');
     });
 
     // Command activity log.

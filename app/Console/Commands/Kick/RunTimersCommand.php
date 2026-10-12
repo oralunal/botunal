@@ -50,7 +50,7 @@ class RunTimersCommand extends Command
             $lastRun = null;
         }
 
-        $next = $timers->first(fn (Timer $timer): bool => $timer->id > ($lastRun?->id ?? 0)) ?? $timers->first();
+        $next = $timers->first(fn (Timer $timer): bool => $lastRun === null || $timer->comesAfter($lastRun)) ?? $timers->first();
         $previousRunAt = $lastRun?->last_run_at ?? $streamStartedAt ?? $next->created_at;
 
         if (! $next->isDueAfter($previousRunAt) || ! $this->chatActiveEnough($next, $previousRunAt)) {

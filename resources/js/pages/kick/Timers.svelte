@@ -1,11 +1,14 @@
 <script lang="ts">
     import { router } from '@inertiajs/svelte';
+    import ChevronDown from 'lucide-svelte/icons/chevron-down';
+    import ChevronUp from 'lucide-svelte/icons/chevron-up';
     import AppHead from '@/components/AppHead.svelte';
     import { Badge } from '@/components/ui/badge';
     import { Button } from '@/components/ui/button';
     import { Card, CardContent } from '@/components/ui/card';
     import { Input } from '@/components/ui/input';
     import { Label } from '@/components/ui/label';
+    import { update as updateOrder } from '@/routes/kick/timer-order';
     import { destroy, store, update } from '@/routes/kick/timers';
 
     type Timer = {
@@ -53,6 +56,13 @@
         }
     }
 
+    function move(index: number, offset: number) {
+        const ids = timers.map((timer) => timer.id);
+        [ids[index], ids[index + offset]] = [ids[index + offset], ids[index]];
+
+        router.put(updateOrder().url, { ids }, { preserveScroll: true });
+    }
+
     function remove(timer: Timer) {
         if (confirm(`"${timer.name}" zamanlayıcısı silinsin mi?`)) {
             router.delete(destroy(timer.id).url);
@@ -68,6 +78,7 @@
         <p class="text-sm text-muted-foreground">
             Zamanlayıcılar listedeki sırayla tek tek çalışır; her biri bir
             önceki zamanlayıcı mesajından sonra kendi süresi kadar bekler.
+            Sırayı oklarla değiştirebilirsin.
         </p>
     </div>
     <Button onclick={newTimer}>Yeni zamanlayıcı</Button>
@@ -167,7 +178,33 @@
         <tbody>
             {#each timers as timer, index (timer.id)}
                 <tr class="border-t">
-                    <td class="px-3 py-2 text-muted-foreground">{index + 1}</td>
+                    <td class="px-3 py-2">
+                        <div class="flex items-center gap-1">
+                            <span class="w-5 text-muted-foreground">
+                                {index + 1}
+                            </span>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                class="h-7 w-7"
+                                aria-label="Yukarı taşı"
+                                disabled={index === 0}
+                                onclick={() => move(index, -1)}
+                            >
+                                <ChevronUp class="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                class="h-7 w-7"
+                                aria-label="Aşağı taşı"
+                                disabled={index === timers.length - 1}
+                                onclick={() => move(index, 1)}
+                            >
+                                <ChevronDown class="h-4 w-4" />
+                            </Button>
+                        </div>
+                    </td>
                     <td class="px-3 py-2 font-medium whitespace-nowrap">
                         {timer.name}
                     </td>
