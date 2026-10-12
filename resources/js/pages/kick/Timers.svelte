@@ -62,7 +62,7 @@
 
 <AppHead title="Kick zamanlayıcıları" />
 
-<div class="flex items-center justify-between">
+<div class="flex items-center justify-between gap-4">
     <div>
         <h2 class="text-lg font-semibold">Zamanlayıcılar</h2>
         <p class="text-sm text-muted-foreground">
@@ -153,7 +153,7 @@
 
 <div class="mt-4 overflow-x-auto rounded-md border">
     <table class="w-full text-sm">
-        <thead class="bg-muted/50 text-left">
+        <thead class="bg-muted/50 text-left whitespace-nowrap">
             <tr>
                 <th class="px-3 py-2">Sıra</th>
                 <th class="px-3 py-2">Ad</th>
@@ -168,10 +168,16 @@
             {#each timers as timer, index (timer.id)}
                 <tr class="border-t">
                     <td class="px-3 py-2 text-muted-foreground">{index + 1}</td>
-                    <td class="px-3 py-2 font-medium">{timer.name}</td>
+                    <td class="px-3 py-2 font-medium whitespace-nowrap">
+                        {timer.name}
+                    </td>
                     <td class="px-3 py-2">{timer.interval_seconds}s</td>
                     <td class="px-3 py-2">{timer.min_messages_between}</td>
-                    <td class="px-3 py-2 truncate">{timer.message}</td>
+                    <td class="px-3 py-2">
+                        <div class="max-w-xs truncate" title={timer.message}>
+                            {timer.message}
+                        </div>
+                    </td>
                     <td class="px-3 py-2">
                         {#if timer.is_enabled}
                             <Badge>etkin</Badge>
@@ -179,7 +185,7 @@
                             <Badge variant="secondary">devre dışı</Badge>
                         {/if}
                     </td>
-                    <td class="px-3 py-2 text-right">
+                    <td class="px-3 py-2 text-right whitespace-nowrap">
                         <Button
                             variant="ghost"
                             size="sm"
