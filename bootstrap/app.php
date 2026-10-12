@@ -43,7 +43,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withSchedule(function (Schedule $schedule): void {
         $schedule->command('kick:refresh-tokens')->everyFiveMinutes();
         $schedule->command('kick:sync-subscriptions')->hourly();
-        $schedule->command('kick:run-timers')->everyMinute()->withoutOverlapping();
+        $schedule->command('kick:run-timers')->everyFiveSeconds()->withoutOverlapping();
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

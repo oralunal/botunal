@@ -15,7 +15,7 @@ class TimerController extends Controller
     public function index(): Response
     {
         return Inertia::render('kick/Timers', [
-            'timers' => Timer::query()->orderBy('name')->get(),
+            'timers' => Timer::query()->inRotationOrder()->get(),
         ]);
     }
 

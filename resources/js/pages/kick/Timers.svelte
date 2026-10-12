@@ -63,7 +63,13 @@
 <AppHead title="Kick zamanlayıcıları" />
 
 <div class="flex items-center justify-between">
-    <h2 class="text-lg font-semibold">Zamanlayıcılar</h2>
+    <div>
+        <h2 class="text-lg font-semibold">Zamanlayıcılar</h2>
+        <p class="text-sm text-muted-foreground">
+            Zamanlayıcılar listedeki sırayla tek tek çalışır; her biri bir
+            önceki zamanlayıcı mesajından sonra kendi süresi kadar bekler.
+        </p>
+    </div>
     <Button onclick={newTimer}>Yeni zamanlayıcı</Button>
 </div>
 
@@ -94,7 +100,7 @@
             </div>
             <div class="grid gap-3 sm:grid-cols-2">
                 <div class="grid gap-1">
-                    <Label for="interval">Aralık (sn)</Label>
+                    <Label for="interval">Bekleme (sn)</Label>
                     <Input
                         id="interval"
                         type="number"
@@ -104,9 +110,12 @@
                                 e.currentTarget.value,
                             ))}
                     />
+                    <p class="text-xs text-muted-foreground">
+                        Önceki zamanlayıcı mesajından sonra beklenecek süre.
+                    </p>
                 </div>
                 <div class="grid gap-1">
-                    <Label for="minmsg">Aralıktaki min mesaj</Label>
+                    <Label for="minmsg">Min izleyici mesajı</Label>
                     <Input
                         id="minmsg"
                         type="number"
@@ -116,6 +125,10 @@
                                 e.currentTarget.value,
                             ))}
                     />
+                    <p class="text-xs text-muted-foreground">
+                        Önceki zamanlayıcı mesajından beri izleyicilerin atması
+                        gereken mesaj sayısı (0 = şart yok).
+                    </p>
                 </div>
             </div>
             <div class="flex gap-4 text-sm">
@@ -142,18 +155,22 @@
     <table class="w-full text-sm">
         <thead class="bg-muted/50 text-left">
             <tr>
+                <th class="px-3 py-2">Sıra</th>
                 <th class="px-3 py-2">Ad</th>
-                <th class="px-3 py-2">Aralık</th>
+                <th class="px-3 py-2">Bekleme</th>
+                <th class="px-3 py-2">Min mesaj</th>
                 <th class="px-3 py-2">Mesaj</th>
                 <th class="px-3 py-2">Durum</th>
                 <th class="px-3 py-2"></th>
             </tr>
         </thead>
         <tbody>
-            {#each timers as timer (timer.id)}
+            {#each timers as timer, index (timer.id)}
                 <tr class="border-t">
+                    <td class="px-3 py-2 text-muted-foreground">{index + 1}</td>
                     <td class="px-3 py-2 font-medium">{timer.name}</td>
                     <td class="px-3 py-2">{timer.interval_seconds}s</td>
+                    <td class="px-3 py-2">{timer.min_messages_between}</td>
                     <td class="px-3 py-2 truncate">{timer.message}</td>
                     <td class="px-3 py-2">
                         {#if timer.is_enabled}
@@ -182,7 +199,7 @@
             {:else}
                 <tr>
                     <td
-                        colspan="5"
+                        colspan="7"
                         class="px-3 py-6 text-center text-muted-foreground"
                     >
                         Henüz zamanlayıcı yok.

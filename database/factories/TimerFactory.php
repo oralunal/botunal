@@ -32,4 +32,9 @@ class TimerFactory extends Factory
     {
         return $this->state(fn () => ['is_enabled' => false]);
     }
+
+    public function runsWhileOffline(): static
+    {
+        return $this->state(fn () => ['only_when_live' => false]);
+    }
 }

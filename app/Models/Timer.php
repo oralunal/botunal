@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Database\Factories\TimerFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
@@ -42,11 +43,20 @@ class Timer extends Model
     }
 
     /**
-     * Whether enough time has elapsed since the timer last fired.
+     * Timers take turns in creation order.
+     *
+     * @param  Builder<Timer>  $query
      */
-    public function isDue(): bool
+    public function scopeInRotationOrder(Builder $query): void
     {
-        return $this->last_run_at === null
-            || $this->last_run_at->addSeconds($this->interval_seconds)->isPast();
+        $query->orderBy('id');
+    }
+
+    /**
+     * Whether the timer has waited its interval since the previous timer message.
+     */
+    public function isDueAfter(CarbonInterface $previousRunAt): bool
+    {
+        return now()->subSeconds($this->interval_seconds)->greaterThanOrEqualTo($previousRunAt);
     }
 }
